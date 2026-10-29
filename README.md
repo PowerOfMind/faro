@@ -1,4 +1,4 @@
-# LightHub
+# LightHub Dev
 
 Atajos para cuando la IA no te da la solución: guías cortas de Lit, JS/TS, React/Angular, IA y agentes, seguridad con IA y SEO/GEO. Sitio **estático** (HTML generado, sin dependencias de ejecución).
 

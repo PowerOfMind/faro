@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "dist"
-SITE = "LightHub"
+SITE = "LightHub Dev"
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 PREFIX = urlparse(SITE_URL).path.rstrip("/") + "/" if SITE_URL else "/"   # para el 404
 DEFAULT = "es"

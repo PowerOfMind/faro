@@ -44,3 +44,29 @@ Si el usuario escribe rápido y llegan respuestas desordenadas, aborta la petici
 
 ## Top-level await
 Disponible en módulos ES (`<script type="module">`, Node ESM). No en CommonJS.
+
+=== esquema
+# Paralelo
+- Promise.all — rechaza en cuanto falla una.
+- allSettled — espera todas y da estado.
+- race y any — primera terminada o primera cumplida.
+# Seguridad
+- AbortController — cancelación y timeout.
+- fetch no lanza en 404/500 — comprueba r.ok.
+- forEach no espera — usa for...of o Promise.all.
+=== test
+? ¿Hace fetch un throw en un 404?
+- Sí
+* No: hay que comprobar r.ok
+- Solo en 500
+! fetch solo falla por errores de red.
+? ¿Espera arr.forEach(async ...)?
+- Sí
+* No
+- Solo con await fuera
+! Usa for...of o Promise.all(arr.map(...)).
+? ¿Cómo pones un timeout a un fetch?
+* AbortSignal.timeout(ms)
+- setTimeout sin más
+- Con try/catch
+! La señal aborta la petición.

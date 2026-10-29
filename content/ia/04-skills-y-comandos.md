@@ -37,3 +37,31 @@ La **descripción** es lo más importante: decide cuándo se activa. Escríbela 
 - Instrucciones en pasos comprobables; incluye un ejemplo de salida.
 - No metas secretos en el `SKILL.md`.
 - Pruébala con 3 peticiones reales y ajusta la descripción hasta que se active sola.
+
+=== esquema
+# Piezas
+- Skill — SKILL.md que se carga solo cuando la tarea encaja.
+- CLAUDE.md — contexto fijo del repositorio.
+- Subagente — especialista con su propio contexto.
+- Hook — código que siempre se ejecuta ante un evento.
+- MCP — conecta herramientas y datos externos.
+# Reglas
+- Algo que debe ocurrir siempre — hook.
+- Algo que el modelo debe recordar con criterio — skill o mapa.
+- Una skill, una tarea — si hace tres cosas, son tres.
+=== test
+? ¿Qué es lo más importante del SKILL.md para que se active?
+- El nombre de la carpeta
+* La descripción: qué hace y cuándo usarla
+- El número de pasos
+! El modelo decide por la descripción cuándo cargar la skill.
+? Quieres que un formateador se ejecute SIEMPRE tras editar. ¿Qué usas?
+* Un hook
+- Una skill
+- Una frase en el chat
+! Los hooks los ejecuta el sistema; una instrucción en el chat no persiste.
+? ¿Por qué ahorran contexto las skills?
+- Porque son más cortas
+* Porque solo se cargan cuando la tarea las necesita
+- Porque borran el historial
+! Las instrucciones completas entran al contexto únicamente cuando hacen falta.

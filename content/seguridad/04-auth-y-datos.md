@@ -35,3 +35,29 @@ Nunca confíes en el precio o el "pagado" que envía el cliente. Confirma por **
 
 > [!SEC] Prueba rápida
 > Entra con el usuario A, copia una petición de la pestaña Network, repítela con el id de un recurso del usuario B. Si responde, tienes un IDOR.
+
+=== esquema
+# Conceptos
+- Autenticación — quién eres.
+- Autorización — qué puedes hacer sobre qué recurso.
+- IDOR — acceso a recursos ajenos por cambiar un id.
+# Datos
+- RLS (Supabase) — políticas por fila; sin ellas, nadie o todos.
+- Reglas de Firebase — nunca allow read, write: if true.
+- service_role — salta RLS, solo en servidor.
+=== test
+? ¿Cómo evitas un IDOR?
+- Ocultando el botón
+* Acotando la consulta por dueño en el servidor
+- Con un id más largo
+! La autorización se comprueba en cada petición.
+? Tabla de Supabase con RLS desactivado y clave pública en el cliente. ¿Riesgo?
+* Cualquiera puede leer y escribir
+- Ninguno
+- Solo lectura
+! Sin RLS el cliente tiene acceso total.
+? ¿Cómo confirmas un pago?
+- Con el "pagado" que envía el cliente
+* Con un webhook firmado del proveedor
+- Con una cookie
+! El cliente puede mentir.

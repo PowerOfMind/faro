@@ -26,3 +26,28 @@ Los agentes también instalan paquetes y ejecutan scripts. Configura que **pidan
 
 > [!AI] Pregunta útil
 > "¿Hay una forma sin dependencia nueva? Si no, dame 3 candidatas con enlace al repositorio y fecha de último release." Y compruébalas tú.
+
+=== esquema
+# Amenaza
+- Slopsquatting — la IA recomienda un paquete inexistente y alguien lo registra.
+- Typosquatting — nombre casi igual a uno famoso.
+# Defensa
+- npm view — existe, creado cuándo, repositorio.
+- Menos dependencias — si son 10 líneas, escríbelas.
+- --ignore-scripts — y revisar postinstall.
+=== test
+? ¿Qué es el slopsquatting?
+* Registrar un paquete malicioso con un nombre que la IA suele inventar
+- Un tipo de CSS
+- Comprimir paquetes
+! Quien copia el npm install sin mirar lo instala.
+? Señal de alarma al evaluar un paquete:
+- Tiene README
+* Creado hace días, sin repositorio y con scripts postinstall
+- Usa TypeScript
+! Estas señales combinadas indican riesgo.
+? ¿Cómo reduces superficie de ataque?
+* Menos dependencias y versiones fijadas con lockfile
+- Usar latest en producción
+- Instalar todo global
+! Cada dependencia es código que ejecutas.

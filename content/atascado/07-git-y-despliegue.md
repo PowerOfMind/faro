@@ -33,3 +33,30 @@ Mensajes de commit con el *por qué*; commits pequeños son más fáciles de rev
 
 > [!NOTE] Ficheros generados
 > Si el repo contiene salida de build, decide si se versiona. Si no, `.gitignore` y que lo genere el CI.
+
+=== esquema
+# Git
+- reset --soft HEAD~1 — deshace el commit y conserva cambios.
+- stash -u — guarda cambios a medias.
+- reflog — recupera lo "perdido".
+- Secreto subido — revócalo primero.
+# Producción
+- Mayúsculas — Linux distingue Logo.png de logo.png.
+- Base path — GitHub Pages sirve bajo /repo/.
+- Variables — definidas en el hosting, no solo en .env local.
+=== test
+? Subiste una clave a git por error. ¿Qué haces primero?
+- Reescribir el historial
+* Revocar y rotar la clave
+- Borrar el repo
+! Si se filtró, ya es pública; limpiar el historial es secundario.
+? Funciona en tu Windows y da 404 de una imagen en producción. ¿Sospecha?
+* Diferencia de mayúsculas/minúsculas en el nombre del fichero
+- Falta de RAM
+- El tema oscuro
+! Linux distingue mayúsculas; Windows no.
+? ¿Cómo deshaces el último commit sin perder los cambios?
+- git reset --hard HEAD~1
+* git reset --soft HEAD~1
+- git revert --hard
+! --soft deja los cambios preparados.

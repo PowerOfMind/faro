@@ -29,3 +29,29 @@ Los tokens se gastan en lo que **lee** el modelo (contexto) más que en lo que e
 
 > [!TIP] Medir
 > Mira el uso de contexto del agente de vez en cuando. Si una tarea supera el 50 % del contexto, resume y empieza de nuevo con ese resumen.
+
+=== esquema
+# Qué gasta
+- Contexto leído — cada mensaje reenvía el historial.
+- Salida larga — pide diff, no ficheros.
+# Qué ahorra
+- /clear entre tareas — no arrastres una tarea terminada.
+- Mapa del proyecto — CLAUDE.md con dónde está cada cosa.
+- Marcar lo generado — dist/, lockfiles y JSON enormes fuera de lectura.
+- Subagentes — leen mucho en su contexto y devuelven un resumen.
+=== test
+? ¿Dónde se van la mayoría de los tokens?
+* En lo que el modelo lee (contexto)
+- En las tildes
+- Solo en lo que escribe
+! Cada mensaje reenvía el historial, así que el contexto pesa más que la salida.
+? ¿Para qué sirve un CLAUDE.md?
+- Para guardar contraseñas
+* Para darle al agente un mapa fijo: dónde editar, comandos y trampas
+- Para borrar el historial
+! Evita que explore a ciegas en cada sesión.
+? ¿Qué haces al terminar una tarea y empezar otra distinta?
+* Limpiar el contexto (/clear)
+- Seguir en el mismo chat
+- Pegar más ficheros
+! Arrastrar la tarea anterior gasta tokens y distrae al modelo.

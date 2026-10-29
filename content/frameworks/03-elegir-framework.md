@@ -27,3 +27,29 @@ desc: Criterios prácticos, no modas.
 
 > [!NOTE] Estabilidad
 > Cambiar de framework a mitad de proyecto casi nunca compensa. Mejor mejorar el que tienes: rendimiento, tests, tipos.
+
+=== esquema
+# Criterios
+- Equipo — el mejor es el que dominan.
+- Contenido o aplicación — estático/SSR o SPA.
+- Vida del proyecto — los estándares envejecen mejor.
+- IA — React tiene más ejemplos; en otros aporta versión y contexto.
+# Casos
+- Design system — Lit consumido desde React y Angular.
+- Sitio de contenido — Astro o generador estático.
+=== test
+? Para un blog o documentación, ¿qué suele convenir?
+* HTML estático (Astro, Eleventy o similar)
+- Una SPA con login
+- Una app móvil
+! Es rápido, indexable y barato.
+? ¿Qué criterio pesa más al elegir framework?
+* Qué domina el equipo
+- La moda del momento
+- El nombre
+! La productividad real manda.
+? Un design system usado por equipos con React y Angular:
+- Dos librerías separadas
+* Web Components (Lit) compartidos
+- Copiar y pegar
+! Los Web Components funcionan en cualquier framework.

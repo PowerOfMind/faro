@@ -32,3 +32,29 @@ Si el `curl` no muestra tu texto, un rastreador sin JS tampoco.
 
 > [!TIP] Para sitios de contenido
 > Un generador estático (Astro, Eleventy, Next con export, o uno propio como este) da HTML completo, rápido y barato de alojar.
+
+=== esquema
+# Estrategias
+- SPA — HTML casi vacío; peor para SEO.
+- SSG — HTML completo prerenderizado; ideal para contenido.
+- SSR — HTML completo en cada petición.
+# Reglas
+- Metadatos por ruta — en el HTML servido.
+- Enlaces reales a href — no solo onClick.
+- hreflang — entre versiones de idioma.
+=== test
+? Los bots de IA, ¿ejecutan JavaScript?
+- Siempre
+* Muchos no, o de forma limitada
+- Nunca ven HTML
+! Lo que no está en el HTML inicial puede no existir para ellos.
+? ¿Qué es mejor para un sitio de documentación?
+* Generación estática (SSG)
+- SPA sin SSR
+- iframes
+! HTML completo, rápido y barato de alojar.
+? ¿Cómo compruebas qué ve un bot?
+- Con el inspector
+* curl a la URL
+- Con Lighthouse solo
+! Si curl no muestra tu texto, tampoco un rastreador sin JS.

@@ -44,3 +44,29 @@ function f(r: Res) { if (r.ok) r.data; else r.error; }   // TS estrecha el tipo
 
 > [!AI] Atajos peligrosos
 > Ante un error de tipos, la IA a menudo añade `as any` o `// @ts-ignore`. Pídele que entienda el tipo real en vez de callarlo.
+
+=== esquema
+# Tipos
+- unknown — obliga a comprobar; mejor que any.
+- Unión discriminada — estrecha el tipo con una propiedad.
+- as const — literales inmutables.
+- satisfies — valida sin ensanchar.
+# Datos externos
+- JSON y fetch — son unknown; valida con Zod o Valibot.
+- tsconfig — strict y noUncheckedIndexedAccess.
+=== test
+? ¿Por qué unknown antes que any?
+* Obliga a comprobar el tipo antes de usarlo
+- Es más rápido
+- Desactiva el chequeo
+! any apaga TypeScript; unknown lo mantiene.
+? Los tipos de TypeScript, ¿existen en ejecución?
+- Sí
+* No: por eso los datos externos se validan
+- Solo en producción
+! Se borran al compilar.
+? Error "possibly undefined". ¿Solución?
+* Comprobar antes, ?. o ??
+- Añadir as any
+- Usar @ts-ignore
+! Silenciarlo oculta un fallo real.

@@ -36,3 +36,30 @@ Una opción por defecto y cuándo mirar otra. Comprueba siempre mantenimiento y 
 
 > [!AI] Nombres que la IA confunde
 > Pide versión y paquete exacto: `@tanstack/react-query` (v5) no es `react-query` (v3). `date-fns` v3/v4 cambió importaciones. `react-router` v6/v7 no es v5.
+
+=== esquema
+# Por defecto
+- Build — Vite.
+- Tests — Vitest, y Playwright para e2e.
+- Validación — Zod (o Valibot si pesa).
+- Datos de servidor — TanStack Query.
+- Estilos — Tailwind o CSS nativo.
+# Criterios
+- Mantenimiento — release reciente e issues atendidos.
+- Tamaño y tipos — razonable e incluidos.
+=== test
+? ¿Qué usas para validar datos externos con tipos?
+* Zod o Valibot
+- Un if por campo
+- Nada
+! Los tipos no existen en ejecución.
+? ¿Qué criterio miras antes de aceptar una librería?
+* Mantenimiento reciente, tamaño y licencia
+- Solo las estrellas
+- Que la sugiera la IA
+! Una librería sin mantenimiento es deuda.
+? react-query v3 frente a @tanstack/react-query v5:
+* Son versiones distintas con API distinta
+- Idénticas
+- Una es de Vue
+! La IA mezcla nombres y versiones.

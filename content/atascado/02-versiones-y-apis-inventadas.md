@@ -28,3 +28,28 @@ npm view lit dist-tags
 
 > [!TIP] Fija el contexto
 > Pon las versiones clave en el mapa del proyecto (`CLAUDE.md`) para que cada sesión las tenga.
+
+=== esquema
+# Causas
+- Mezcla de versiones — el modelo vio React Router v5 y v7 a la vez.
+- Paradigma antiguo — NgModules, pages/, componentes de clase.
+# Soluciones
+- Decir versión y paradigma — "Next 15 App Router".
+- .d.ts real — node_modules/<pkg>/dist/*.d.ts es la verdad.
+- npm ls — qué versión está instalada de verdad.
+=== test
+? Una API "no hace nada" o "is not a function". ¿Primera sospecha?
+* Código de otra versión de la librería
+- Un fallo del navegador
+- La memoria RAM
+! Los modelos mezclan APIs de versiones distintas.
+? ¿Cuál es la fuente de verdad de los tipos de tu versión?
+- El primer resultado de un buscador
+* El .d.ts dentro de node_modules
+- Una respuesta de foro antigua
+! Es exactamente el código instalado.
+? ¿Qué haces ante un error de tipos que revela una API inexistente?
+- as any para silenciarlo
+* Entender el tipo real y corregir el uso
+- Desactivar TypeScript
+! Callarlo oculta el problema, no lo arregla.

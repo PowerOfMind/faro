@@ -50,3 +50,30 @@ export class ContadorComponent {
 
 > [!AI] Con IA
 > Escribe "Angular standalone con signals y control flow `@if/@for`, sin NgModules". Si ves `*ngIf` o `@NgModule`, es código antiguo.
+
+=== esquema
+# Moderno
+- Standalone — sin NgModules.
+- Signals — signal, computed, effect.
+- Control flow — @if, @for con track, @switch.
+- input() y output() — en lugar de decoradores.
+- inject() — en lugar del constructor.
+# Errores
+- NG0100 — valor cambia tras la detección.
+- Not a known element — falta el import del standalone.
+=== test
+? ¿Qué sustituye a *ngFor?
+* @for con track
+- v-for
+- map en el componente
+! track da identidad a cada elemento.
+? ¿Cómo lees una signal?
+- cuenta.value
+* cuenta()
+- cuenta.get
+! Las signals se leen llamándolas.
+? Ves @NgModule y *ngIf en una respuesta de IA. ¿Qué indica?
+* Código antiguo; pide standalone con signals y control flow
+- Es lo recomendado hoy
+- Es de React
+! Hay que fijar el paradigma al pedir.

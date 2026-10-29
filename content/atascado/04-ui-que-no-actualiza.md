@@ -39,3 +39,28 @@ El HTML del servidor difiere del primer render en cliente.
 
 > [!TIP] Depurar en 2 minutos
 > React DevTools / Angular DevTools: mira qué estado hay realmente, no el que crees.
+
+=== esquema
+# Causas
+- Mutación — arr.push en vez de crear un array nuevo.
+- Stale closure — un callback capturó el valor viejo.
+- Dependencia inestable — objeto nuevo en cada render dentro de un efecto.
+# SSR
+- Hydration mismatch — Date.now() o window durante el render.
+- key={index} — mezcla estado entre filas al reordenar.
+=== test
+? Mutas un array del estado y la UI no cambia. ¿Por qué?
+* La referencia es la misma, no se detecta el cambio
+- El navegador lo cachea
+- Falta un return
+! Crea una copia nueva: [...items, x].
+? setCount(count + 1) dentro de un setInterval con deps [] siempre pone 1. ¿Solución?
+- Quitar el intervalo
+* Forma funcional: setCount(c => c + 1)
+- Usar var
+! La función recibe siempre el valor actual.
+? ¿Qué provoca un "hydration mismatch"?
+* HTML de servidor distinto al primer render en cliente
+- Falta de CSS
+- Un puerto ocupado
+! Pasa con valores que dependen de la hora, aleatorios o de window.

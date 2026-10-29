@@ -33,3 +33,28 @@ En monorepos, declara la librería como `peerDependency` en el paquete compartid
 
 ## Antes de añadir una dependencia
 `npm view <pkg>`: última publicación, mantenedores, tamaño. Si lo sugirió la IA, confirma que existe y es el paquete que crees (ver [slopsquatting](@/seguridad/dependencias)).
+
+=== esquema
+# Conflictos
+- ERESOLVE — un paquete pide otra versión de un peer.
+- Dos copias — instanceof falla o Lit define dos veces.
+- overrides — parche documentado, no solución.
+# Disciplina
+- Lockfile commiteado — npm ci en CI.
+- ESM vs CJS — type module o .mjs; extensión en imports relativos.
+=== test
+? ¿Qué hace npm ci en CI?
+* Instala exactamente lo del lockfile y falla si no cuadra
+- Actualiza todo a latest
+- Borra node_modules sin instalar
+! Da builds reproducibles.
+? "Cannot use import statement outside a module". ¿Arreglo habitual?
+- Cambiar de IDE
+* "type": "module" o extensión .mjs
+- Quitar el import
+! Alinea el tipo de módulo con lo que ejecuta tu runtime.
+? Borrar node_modules y el lockfile "para arreglarlo" es…
+- La primera solución recomendada
+* Último recurso: cambia versiones de todo
+- Imprescindible cada semana
+! Mejor entender qué paquete pide qué versión.

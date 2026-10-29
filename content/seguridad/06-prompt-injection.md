@@ -33,3 +33,29 @@ Un agente que a la vez: (1) lee contenido no fiable, (2) accede a datos privados
 
 > [!SEC] Regla práctica
 > Diseña como si el atacante pudiera escribir en el contexto del modelo. Pregúntate qué es lo peor que podría hacer con las herramientas que le diste.
+
+=== esquema
+# Tipos
+- Directa — el usuario escribe la orden.
+- Indirecta — está en contenido que el agente lee.
+# Defensa
+- Mínimo privilegio — herramientas y tokens justos.
+- Confirmación humana — acciones irreversibles.
+- Salida no fiable — validar antes de ejecutar.
+- Quitar una de tres — contenido no fiable, datos privados, salida a red.
+=== test
+? ¿Por qué funciona la inyección de prompt?
+* El modelo no distingue instrucciones de datos
+- Los modelos no leen HTML
+- Por falta de HTTPS
+! Todo lo que entra al contexto puede influir en el comportamiento.
+? ¿Qué combinación es especialmente peligrosa?
+- Solo lectura sin red
+* Leer contenido no fiable, acceder a datos privados y poder enviar datos fuera
+- Un chat sin herramientas
+! Quita al menos una de las tres.
+? "Ponlo en el prompt de sistema" como única defensa…
+- Elimina el problema
+* Lo reduce, no lo elimina
+- Es obligatoria y suficiente
+! Hacen falta controles fuera del modelo.

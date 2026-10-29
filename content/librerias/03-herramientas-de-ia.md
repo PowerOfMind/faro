@@ -27,3 +27,30 @@ pkgs: "@anthropic-ai/sdk", openai, ai, "@modelcontextprotocol/sdk", langchain
 
 > [!WARN] Precios y modelos cambian
 > No copies cifras de coste de un artículo antiguo. Consulta la página de precios del proveedor el día que decidas.
+
+=== esquema
+# Piezas
+- SDK del proveedor — llamar al modelo.
+- Vercel AI SDK — streaming y capa común.
+- MCP — conectar herramientas externas.
+- pgvector — embeddings y búsqueda semántica.
+# Producción
+- Servidor intermedio — nunca la clave en el navegador.
+- Reintentos con backoff — ante 429 y 5xx.
+- Evaluar — tus casos al cambiar de modelo.
+=== test
+? ¿Desde dónde llamas al modelo con tu clave?
+* Desde tu servidor
+- Desde el navegador
+- Desde un fichero público
+! La clave no debe llegar al cliente.
+? Respuesta 429 del proveedor. ¿Qué haces?
+* Reintentar con backoff
+- Reintentar sin pausa
+- Ignorarlo
+! El backoff evita saturar y respeta los límites.
+? Cambias de modelo. ¿Qué haces?
+* Repetir tus evaluaciones
+- Nada
+- Subir max_tokens
+! El comportamiento cambia entre modelos.

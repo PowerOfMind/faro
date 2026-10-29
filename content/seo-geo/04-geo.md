@@ -33,3 +33,30 @@ Propuesta de fichero en Markdown en la raíz que resume el sitio y enlaza a las 
 
 > [!NOTE] Cómo medir
 > Busca tus preguntas objetivo en varios asistentes con búsqueda, anota si te citan, y repite cada mes. Los analytics muestran visitas con referrer de dominios de asistentes.
+
+=== esquema
+# Qué funciona
+- SEO sólido primero — si no estás indexado, no existes.
+- HTML legible sin JS — los bots de IA suelen no ejecutarlo.
+- Respuesta directa — pregunta y 1-2 frases de respuesta.
+- Hechos citables — cifras con fuente, fechas, tablas.
+- Autoría y fecha — señales de confianza.
+# Cautela
+- llms.txt — barato, sin evidencia sólida de efecto.
+- Bots de IA — distingue entrenamiento y búsqueda en robots.txt.
+=== test
+? ¿Qué es GEO?
+* Optimizar para que los buscadores con IA te citen como fuente
+- Un formato de imagen
+- Un tipo de servidor
+! Es SEO con foco en aparecer dentro de la respuesta generada.
+? ¿Mejora llms.txt las citas, según la evidencia actual?
+- Sí, de forma clara
+* No hay evidencia sólida: es un extra, no una estrategia
+- Es obligatorio
+! Los grandes buscadores no lo han adoptado como estándar.
+? ¿Qué contenido se cita más?
+* Hechos concretos con fuente y fecha visibles
+- Texto genérico en masa
+- Frases vagas
+! Los modelos citan afirmaciones verificables.

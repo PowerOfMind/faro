@@ -42,3 +42,32 @@ Para datos de servidor usa **TanStack Query** (o la carga de datos de tu framewo
 
 > [!AI] Con IA
 > Pide "React 19, componentes de función, sin `useEffect` salvo que sea imprescindible". Sin eso tiende a abusar de efectos y de `useMemo`.
+
+=== esquema
+# Modelo
+- Componente — función de props y estado a UI.
+- Estado inmutable — copias nuevas, nunca push.
+- Estado derivado — se calcula, no se guarda.
+# Efectos
+- useEffect — para sincronizar con lo externo.
+- Limpieza — return en el efecto.
+- Datos de servidor — TanStack Query o loader del framework.
+# React 19
+- Actions y use — formularios y promesas.
+- ref como prop — sin forwardRef.
+=== test
+? ¿Cuándo se usa useEffect?
+* Para sincronizar con algo externo: suscripciones, timers, integraciones
+- Para transformar datos
+- Para responder a un clic
+! Lo demás se calcula en render o va en el manejador.
+? Un callback ve el estado antiguo. ¿Causa y arreglo?
+* Cierre sobre valor viejo; usa la forma funcional
+- Falta un key
+- Es un bug del navegador
+! setX(prev => ...) recibe siempre el valor actual.
+? ¿Qué key usas en listas que se reordenan?
+- El índice
+* Un id estable
+- Math.random()
+! El índice mezcla estado entre filas.

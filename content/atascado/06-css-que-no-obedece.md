@@ -31,3 +31,29 @@ Define colores como variables (`--bg`, `--text`), cambia el conjunto bajo `prefe
 
 > [!AI] Para pedir CSS a una IA
 > Dale el HTML real y el contenedor padre; sin ellos inventa estructura. Pídele la causa, no solo un `!important`.
+
+=== esquema
+# Capas y desbordes
+- Contexto de apilamiento — position+z-index, transform, opacity<1.
+- 100vw — incluye la barra de scroll y desborda.
+- min-width:0 — para hijos flex con texto o pre largos.
+# Móvil
+- 100dvh — en vez de 100vh.
+- 44×44 px — objetivo táctil mínimo.
+- font-size 16px — evita el zoom de iOS en inputs.
+=== test
+? Un z-index enorme no pone tu modal delante. ¿Por qué?
+* Un ancestro crea otro contexto de apilamiento
+- El navegador ignora z-index
+- Falta !important
+! El hijo no sale del contexto de su ancestro.
+? Un hijo flex con texto largo empuja el ancho. ¿Arreglo?
+- width:100vw
+* min-width:0 y overflow adecuado
+- display:block en el body
+! Los hijos flex tienen min-width:auto por defecto.
+? ¿Qué unidad usas para altura de pantalla completa en móvil?
+- 100vh
+* 100dvh
+- 100%
+! dvh se ajusta a la barra del navegador.

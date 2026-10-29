@@ -39,3 +39,29 @@ Cookies de sesión + peticiones que cambian datos: usa `SameSite=Lax` o `Strict`
 
 > [!AI] Frase de revisión
 > "Lista todos los puntos donde un dato del usuario llega a SQL, HTML, URL, comando o fichero, y di cómo se sanea cada uno."
+
+=== esquema
+# Inyección
+- Consultas parametrizadas — nunca concatenes entrada en SQL.
+- execFile con array — nunca entrada del usuario en exec.
+# XSS
+- Escape por defecto — React, Angular, Vue y Lit escapan lo que interpolas.
+- Zonas peligrosas — innerHTML, dangerouslySetInnerHTML, v-html, unsafeHTML.
+- DOMPurify — si necesitas HTML del usuario.
+- CSP — empieza en modo Report-Only.
+=== test
+? ¿Cómo evitas la inyección SQL?
+* Consultas parametrizadas
+- Quitando las comillas a mano
+- Usando mayúsculas
+! El motor separa código y datos.
+? ¿Cuándo es peligroso renderizar texto del usuario?
+- Con la interpolación normal
+* Al insertarlo como HTML sin sanear
+- Con textContent
+! innerHTML y equivalentes ejecutan lo que reciben.
+? ¿Para qué sirve una CSP?
+* Limita qué scripts y recursos puede cargar la página
+- Acelera la carga
+- Cifra las cookies
+! Reduce el daño si llega un XSS.

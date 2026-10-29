@@ -31,3 +31,28 @@ echo ".env*" >> .gitignore && echo "!.env.example" >> .gitignore
 
 > [!WARN] Bots
 > Hay bots que rastrean repos públicos y claves en minutos. Un repositorio "privado un ratito" no es seguro.
+
+=== esquema
+# Regla
+- Todo lo que llega al navegador es público — incluidas VITE_* y NEXT_PUBLIC_*.
+- Clave de servidor — solo en el servidor.
+# Si se filtró
+- Revocar y rotar — primero, ya.
+- Revisar el uso del proveedor — actividad extraña.
+- Límites de gasto — y alertas.
+=== test
+? Tu navegador necesita llamar a un modelo de IA de pago. ¿Cómo lo haces?
+- Pones la clave en una variable VITE_
+* Creas un endpoint propio que usa la clave, autentica y limita el uso
+- La ofuscas en el JS
+! La clave solo puede vivir en el servidor.
+? Subiste una clave a un repo público. ¿Qué haces primero?
+* Revocarla y crear otra
+- Borrar el commit
+- Hacer el repo privado
+! Los bots la copian en minutos; el historial es secundario.
+? ¿Qué evita el accidente antes del commit?
+- Un linter de CSS
+* Un escáner de secretos (gitleaks) en pre-commit
+- Reiniciar el equipo
+! Bloquea claves antes de que salgan de tu máquina.

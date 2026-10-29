@@ -42,3 +42,30 @@ const copia = structuredClone(estado);
 
 ## Módulos
 `import`/`export` nativos, `import()` dinámico para cargar bajo demanda, `import.meta.url`. Mira la sección de dependencias en [Dependencias que no cuadran](@/atascado/dependencias) para ESM vs CJS.
+
+=== esquema
+# Nativo
+- structuredClone — copia profunda.
+- toSorted y at — ordenar sin mutar, índice negativo.
+- crypto.randomUUID — ids.
+- Intl — formatos de fecha y número.
+# Trampas
+- ?? frente a || — ?? solo para null/undefined.
+- Coma flotante — dinero en céntimos.
+- sort() — ordena como texto por defecto.
+=== test
+? ¿Qué copia profunda es nativa?
+* structuredClone
+- Object.copy
+- JSON.deepCopy
+! Está disponible en navegadores y Node actuales.
+? Diferencia entre ?? y ||:
+* ?? solo actúa con null o undefined
+- Son iguales
+- ?? actúa con 0 y ''
+! || también considera falsos 0 y la cadena vacía.
+? [1, 10, 2].sort() ordena…
+- Numéricamente
+* Como texto
+- Aleatoriamente
+! Pasa un comparador numérico.

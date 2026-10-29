@@ -1,26 +1,73 @@
 #!/usr/bin/env python3
 """Generador estático sin dependencias. Uso: python build.py  ->  dist/
-Contenido: content/<seccion>/<NN-slug>.md  (cabecera: title, desc, pkgs, updated)."""
-import html, json, os, re, shutil, sys, unicodedata
+Contenido: content/<seccion>/<NN-slug>.md (español, raíz) y content/<lang>/<seccion>/... (otros idiomas).
+Cabecera: title, desc, pkgs, updated. Una página traducida usa el mismo nombre de fichero que la original."""
+import html, json, os, re, shutil, subprocess, sys, unicodedata
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "dist"
 SITE = "Faro"
-LEMA = "Atajos para cuando la IA no te da la solución"
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
+PREFIX = urlparse(SITE_URL).path.rstrip("/") + "/" if SITE_URL else "/"   # para el 404
+DEFAULT = "es"
+LANGS = {"es": ("Español", "es_ES"), "en": ("English", "en_US")}
 
-SECCIONES = [
-    ("ia", "IA y agentes", "Usar Claude, ChatGPT y compañía; skills, MCP y agentes."),
-    ("atascado", "Cuando la IA no resuelve", "Errores que se repiten y el método para salir del bucle."),
-    ("seguridad", "Seguridad con IA", "Qué se rompe cuando una app se genera con IA y cómo evitarlo."),
-    ("seo-geo", "SEO y GEO", "Que te encuentren buscadores y que te citen los modelos."),
-    ("lit", "Lit y Web Components", "Resumen de Lit 3: reactividad, plantillas, estilos y datos."),
-    ("js-ts", "JavaScript y TypeScript", "Lo esencial que más se busca."),
-    ("frameworks", "React y Angular", "Cómo pensar cada uno y sus trampas."),
-    ("librerias", "Librerías rápidas", "Qué usar para cada problema, en una línea."),
-]
+T = {
+    "es": dict(
+        lema="Atajos para cuando la IA no te da la solución",
+        skip="Saltar al contenido", menu="Abrir menú", search="Buscar (pulsa /)", searchl="Buscar", theme="Cambiar tema",
+        home="Inicio", toc="En esta página", vers="Versiones en npm", chk="comprobado", unk="sin comprobar",
+        rev="Revisado", news="Novedades", lang="Idioma", anchor="Enlace a la sección", copy="Copiar", copied="Copiado",
+        hero=("Resúmenes cortos, con código que se copia y los fallos típicos. Se genera como sitio estático y se contrasta "
+              "cada semana con la documentación oficial (última comprobación: {d})."),
+        see_all="Ver los {n} →", foot="contenido estático, revisado cada semana contra la documentación oficial.",
+        newt="Novedades vigiladas", newl="Último dato de cada fuente oficial, comprobado el {d}. Un flujo semanal compara y abre una incidencia si algo cambia.",
+        src="Fuente", last="Último dato", md="Versión en Markdown", nf="Página no encontrada", nfp="Esa página no existe o ha cambiado de sitio.",
+        callouts={"TIP": "Truco", "WARN": "Cuidado", "AI": "Con IA", "SEC": "Seguridad", "NOTE": "Nota"},
+        homed="Guías breves de Lit, JS/TS, React, Angular, IA, seguridad y SEO/GEO para cuando la IA no te da la solución.",
+        secs=[("ia", "IA y agentes", "Usar Claude, ChatGPT y compañía; skills, MCP y agentes."),
+              ("atascado", "Cuando la IA no resuelve", "Errores que se repiten y el método para salir del bucle."),
+              ("seguridad", "Seguridad con IA", "Qué se rompe cuando una app se genera con IA y cómo evitarlo."),
+              ("seo-geo", "SEO y GEO", "Que te encuentren buscadores y que te citen los modelos."),
+              ("lit", "Lit y Web Components", "Resumen de Lit 3: reactividad, plantillas, estilos y datos."),
+              ("js-ts", "JavaScript y TypeScript", "Lo esencial que más se busca."),
+              ("frameworks", "React y Angular", "Cómo pensar cada uno y sus trampas."),
+              ("librerias", "Librerías rápidas", "Qué usar para cada problema, en una línea.")]),
+    "en": dict(
+        lema="Shortcuts for when AI can't give you the answer",
+        skip="Skip to content", menu="Open menu", search="Search (press /)", searchl="Search", theme="Toggle theme",
+        home="Home", toc="On this page", vers="npm versions", chk="checked", unk="unchecked",
+        rev="Reviewed", news="News", lang="Language", anchor="Link to section", copy="Copy", copied="Copied",
+        hero=("Short guides with copy-ready code and the usual failure modes. Built as a static site and checked "
+              "every week against the official documentation (last check: {d})."),
+        see_all="See all {n} →", foot="static content, checked weekly against the official documentation.",
+        newt="Watched sources", newl="Latest item from each official source, checked on {d}. A weekly job compares them and opens an issue when something changes.",
+        src="Source", last="Latest item", md="Markdown version", nf="Page not found", nfp="That page does not exist or has moved.",
+        callouts={"TIP": "Tip", "WARN": "Careful", "AI": "With AI", "SEC": "Security", "NOTE": "Note"},
+        homed="Short guides on Lit, JS/TS, React, Angular, AI, security and SEO/GEO for when AI can't give you the answer.",
+        secs=[("ia", "AI and agents", "Using Claude, ChatGPT and friends; skills, MCP and agents."),
+              ("atascado", "When AI can't fix it", "Recurring errors and a method to break out of the loop."),
+              ("seguridad", "Security with AI", "What breaks when an app is generated by AI, and how to avoid it."),
+              ("seo-geo", "SEO and GEO", "Get found by search engines and cited by models."),
+              ("lit", "Lit and Web Components", "Lit 3 summary: reactivity, templates, styles and data."),
+              ("js-ts", "JavaScript and TypeScript", "The essentials people search for most."),
+              ("frameworks", "React and Angular", "How to think about each one and their traps."),
+              ("librerias", "Quick library picks", "What to use for each problem, in one line.")]),
+}
+
+def purl(lang, rel):
+    return rel if lang == DEFAULT else f"{lang}/{rel}"
+
+def git_date(path, first=False):
+    try:
+        cmd = ["git", "log", "--format=%cs"] + (["--diff-filter=A"] if first else ["-1"]) + ["--", str(path)]
+        out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=20).stdout.split()
+        return (out[-1] if first else out[0]) if out else ""
+    except Exception:
+        return ""
 
 def esc(s): return html.escape(s, quote=False)
 
@@ -116,23 +163,30 @@ def parse(path):
             meta[k.strip()] = v.strip().replace('"', "")
     return meta, body.strip()
 
-def cargar():
+def cargar(lang):
     pages = []
-    for sec, stitle, _ in SECCIONES:
-        d = ROOT / "content" / sec
+    for sec, stitle, _ in T[lang]["secs"]:
+        d = ROOT / "content" / sec if lang == DEFAULT else ROOT / "content" / lang / sec
         for f in sorted(d.glob("*.md")) if d.exists() else []:
             meta, body = parse(f)
             slug = re.sub(r"^\d+-", "", f.stem)
-            pages.append(dict(sec=sec, stitle=stitle, slug=slug, url=f"{sec}/{slug}.html", body=body,
+            rel = f"{sec}/{slug}.html"
+            mod = meta.get("updated") or git_date(f.relative_to(ROOT)) or date.today().isoformat()
+            pages.append(dict(lang=lang, sec=sec, stitle=stitle, slug=slug, rel=rel, url=purl(lang, rel), body=body,
                               title=meta.get("title", slug), desc=meta.get("desc", ""),
                               pkgs=[p.strip() for p in meta.get("pkgs", "").split(",") if p.strip()],
-                              updated=meta.get("updated", "")))
+                              mod=mod, created=git_date(f.relative_to(ROOT), True) or mod))
     return pages
 
 # ---------- Plantillas ----------
-def sidebar(pages, base, cur):
-    s = ["<nav id='nav' aria-label='Temas'>"]
-    for sec, st, _ in SECCIONES:
+def canon(lang, rel):
+    p = purl(lang, rel)
+    if p.endswith("index.html"): p = p[:-10]
+    return f"{SITE_URL}/{p}"
+
+def sidebar(pages, base, cur, lang):
+    s = [f"<nav id='nav' aria-label='{esc(T[lang]['homed'][:0] or 'Menú')}'>"]
+    for sec, st, _ in T[lang]["secs"]:
         ps = [p for p in pages if p["sec"] == sec]
         if not ps: continue
         op = " open" if cur and cur["sec"] == sec else ""
@@ -146,78 +200,209 @@ def sidebar(pages, base, cur):
 
 def versiones(p, vers):
     if not p["pkgs"]: return ""
+    t = T[p["lang"]]
     rows = []
     for k in p["pkgs"]:
         v = vers.get("pkgs", {}).get(k)
-        rows.append(f"<li><code>{esc(k)}</code> <span>{esc(v['v']) if v else 'sin comprobar'}</span></li>")
-    return (f"<aside class='vers'><b>Versiones en npm</b> (comprobado {esc(vers.get('checked', '—'))})"
+        rows.append(f"<li><code>{esc(k)}</code> <span>{esc(v['v']) if v else t['unk']}</span></li>")
+    return (f"<aside class='vers'><b>{t['vers']}</b> ({t['chk']} <time datetime='{esc(vers.get('checked', ''))}'>{esc(vers.get('checked', '—'))}</time>)"
             f"<ul>{''.join(rows)}</ul></aside>")
 
-def shell(pages, base, cur, title, desc, main, canon_path, ld="", index=False):
-    full = f"{title} · {SITE}" if cur else f"{SITE} · {LEMA}"
-    canon = f'<link rel="canonical" href="{SITE_URL}/{canon_path}">' if SITE_URL else ""
-    og = f'<meta property="og:url" content="{SITE_URL}/{canon_path}">' if SITE_URL else ""
+def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl=""):
+    t = T[lang]
+    full = f"{title} · {SITE}" if cur else f"{SITE} · {t['lema']}"
+    d = html.escape(desc)
+    head = []
+    if SITE_URL:
+        head.append(f'<link rel="canonical" href="{canon(lang, rel)}">')
+        for l, r in alts.items():
+            head.append(f'<link rel="alternate" hreflang="{l}" href="{canon(l, r)}">')
+        if DEFAULT in alts:
+            head.append(f'<link rel="alternate" hreflang="x-default" href="{canon(DEFAULT, alts[DEFAULT])}">')
+        head.append(f'<meta property="og:url" content="{canon(lang, rel)}">')
+        head.append(f'<meta property="og:image" content="{SITE_URL}/assets/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+                    f'<meta name="twitter:image" content="{SITE_URL}/assets/og.png">')
+    head.append(f'<meta property="og:locale" content="{LANGS[lang][1]}">' +
+                "".join(f'<meta property="og:locale:alternate" content="{LANGS[l][1]}">' for l in alts if l != lang))
+    if mdurl:
+        head.append(f'<link rel="alternate" type="text/markdown" href="{base}{mdurl}" title="{esc(t["md"])}">')
+    langs = "".join(
+        f'<a lang="{l}" hreflang="{l}" href="{base}{purl(l, alts[l]) if l in alts else purl(l, "index.html")}"'
+        f'{" aria-current=true" if l == lang else ""}>{l.upper()}</a>' for l in LANGS)
     return f"""<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(full)}</title><meta name="description" content="{html.escape(desc)}">{canon}
-<meta property="og:title" content="{html.escape(full)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:type" content="{'article' if cur else 'website'}">{og}
+<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(full)}</title><meta name="description" content="{d}">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta property="og:site_name" content="{SITE}"><meta property="og:title" content="{html.escape(full)}"><meta property="og:description" content="{d}"><meta property="og:type" content="{'article' if cur else 'website'}">
+<meta name="twitter:card" content="summary_large_image">{''.join(head)}
 <meta name="theme-color" content="#0b1b2b"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{base}assets/style.css">{ld}
-<script>try{{var t=localStorage.getItem('faro-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
-</head><body data-base="{base}">
-<a class="skip" href="#main">Saltar al contenido</a>
-<header class="top"><button id="menu" class="ib" aria-controls="nav" aria-expanded="false" aria-label="Abrir menú">☰</button>
-<a class="brand" href="{base}index.html"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h-6zM9 9h6l1 11H8zM3 22h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>{SITE}</a>
-<div class="search"><input id="q" type="search" placeholder="Buscar (pulsa /)" aria-label="Buscar" autocomplete="off"><ul id="res" hidden></ul></div>
-<button id="theme" class="ib" aria-label="Cambiar tema">◐</button></header>
-<div class="wrap"><aside class="side">{sidebar(pages, base, cur)}</aside><div id="scrim" hidden></div>
+<script>document.documentElement.className='js';try{{var t=localStorage.getItem('faro-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
+</head><body data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}">
+<a class="skip" href="#main">{t['skip']}</a>
+<header class="top"><button id="menu" class="ib" aria-controls="nav" aria-expanded="false" aria-label="{t['menu']}">☰</button>
+<a class="brand" href="{base}{purl(lang, 'index.html')}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h-6zM9 9h6l1 11H8zM3 22h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>{SITE}</a>
+<div class="search"><input id="q" type="search" placeholder="{t['search']}" aria-label="{t['searchl']}" autocomplete="off"><ul id="res" hidden></ul></div>
+<nav class="lang" aria-label="{t['lang']}">{langs}</nav>
+<button id="theme" class="ib" aria-label="{t['theme']}">◐</button></header>
+<div class="wrap"><aside class="side">{sidebar(pages, base, cur, lang)}</aside><div id="scrim" hidden></div>
 <main id="main">{main}</main></div>
-<footer>{SITE} · contenido estático, revisado cada semana contra la documentación oficial. <a href="{base}novedades.html">Novedades</a></footer>
+<footer>{SITE} · {t['foot']} <a href="{base}{purl(lang, 'novedades.html')}">{t['news']}</a></footer>
 <script src="{base}assets/app.js" defer></script></body></html>"""
 
-def pagina(p, pages, vers):
-    base = "../"
+T["es"].update(
+    tabs=dict(leccion="Lección", esquema="Esquema", test="Test", prueba="Pruébalo"), tabl="Secciones del tema",
+    ok="¡Correcto!", ko="Incorrecto.", score="Aciertos", run="Ejecutar", reset="Restaurar", reto="Reto", clave="Idea clave",
+    result="Resultado", retry="Reintentar", cons="Consola", sandbox="Se ejecuta en tu navegador, aislado.", jsl="JavaScript")
+T["en"].update(
+    tabs=dict(leccion="Lesson", esquema="Outline", test="Quiz", prueba="Try it"), tabl="Topic sections",
+    ok="Correct!", ko="Not quite.", score="Score", run="Run", reset="Reset", reto="Challenge", clave="Key idea",
+    result="Result", retry="Try again", cons="Console", sandbox="Runs in your browser, sandboxed.", jsl="JavaScript")
+
+def split_sections(body):
+    parts = re.split(r"^=== (\w+)\s*$", body, flags=re.M)
+    out = {"leccion": parts[0].strip()}
+    for i in range(1, len(parts), 2):
+        out[parts[i]] = parts[i + 1].strip()
+    return out
+
+def render_esquema(txt, base):
+    blocks, cur = [], None
+    for l in txt.splitlines():
+        if l.startswith("# "):
+            cur = [l[2:].strip(), []]; blocks.append(cur)
+        elif l.startswith("- ") and cur:
+            term, _, desc = l[2:].partition(" — ")
+            cur[1].append((term.strip(), desc.strip()))
+    return '<div class="esq">' + "".join(
+        f'<section class="eb"><h3>{inline(t, base)}</h3><ul>' +
+        "".join(f"<li><b>{inline(a, base)}</b><span>{inline(b, base)}</span></li>" for a, b in items) + "</ul></section>"
+        for t, items in blocks) + "</div>"
+
+def render_test(txt, t, base):
+    qs, q, L, i = [], None, txt.splitlines(), 0
+    while i < len(L):
+        l = L[i]
+        if l.startswith("? "):
+            q = dict(q=l[2:], code="", o=[], a=0, f=""); qs.append(q)
+        elif l.startswith("```") and q is not None and not q["o"]:
+            i += 1; buf = []
+            while i < len(L) and not L[i].startswith("```"):
+                buf.append(L[i]); i += 1
+            q["code"] = "\n".join(buf)
+        elif l[:2] in ("- ", "* ") and q is not None:
+            if l[0] == "*": q["a"] = len(q["o"])
+            q["o"].append(l[2:])
+        elif l.startswith("! ") and q is not None:
+            q["f"] = l[2:]
+        i += 1
+    items = []
+    for q in qs:
+        code = f'<pre class="qc"><code>{esc(q["code"])}</code></pre>' if q["code"] else ""
+        opts = "".join(f'<button type="button" class="o"{" data-c=1" if k == q["a"] else ""}>{inline(o, base)}</button>' for k, o in enumerate(q["o"]))
+        items.append(f'<li class="q"><p class="qt">{inline(q["q"], base)}</p>{code}<div class="opts" role="group">{opts}</div>'
+                     f'<p class="fb" hidden>{inline(q["f"], base)}</p></li>')
+    return (f'<div class="quiz" data-score="{t["score"]}" data-ok="{t["ok"]}" data-ko="{t["ko"]}"><ol>{"".join(items)}</ol>'
+            f'<p class="score" aria-live="polite"></p><button type="button" class="retry btn" hidden>{t["retry"]}</button></div>')
+
+def render_prueba(txt, t, base):
+    out = []
+    for g in re.split(r"^## ", txt, flags=re.M)[1:]:
+        title, _, rest = g.partition("\n")
+        code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", rest, re.S)}
+        desc = rest.split("```")[0].strip()
+        reto = re.search(r"^Reto: (.*)$", rest, re.M); clave = re.search(r"^Clave: (.*)$", rest, re.M)
+        out.append(
+            f'<section class="try"><h3>{inline(title, base)}</h3><p>{inline(desc, base)}</p>'
+            f'<label>HTML<textarea class="th" spellcheck="false" rows="4">{esc(code.get("html", ""))}</textarea></label>'
+            f'<label>{t["jsl"]}<textarea class="tj" spellcheck="false" rows="12">{esc(code.get("js", ""))}</textarea></label>'
+            f'<div class="tb"><button type="button" class="run btn">{t["run"]}</button><button type="button" class="reset btn">{t["reset"]}</button>'
+            f'<small>{t["sandbox"]}</small></div>'
+            f'<iframe class="out" sandbox="allow-scripts" title="{t["result"]}"></iframe><pre class="con" aria-label="{t["cons"]}" hidden></pre>'
+            + (f'<p class="reto"><b>{t["reto"]}:</b> {inline(reto.group(1), base)}</p>' if reto else "")
+            + (f'<p class="clave"><b>{t["clave"]}:</b> {inline(clave.group(1), base)}</p>' if clave else "") + "</section>")
+    return "".join(out)
+
+def pagina(p, pages, vers, alts):
+    lang, t = p["lang"], T[p["lang"]]
+    base = "../" * p["url"].count("/")
+    lroot = base + purl(lang, "")
+    sec = split_sections(p["body"])
     heads = []
-    body = md(p["body"], base, heads)
+    lec = md(sec["leccion"], lroot, heads)
     toc = ""
     if len(heads) > 2:
-        toc = "<nav class='toc' aria-label='En esta página'><b>En esta página</b>" + "".join(f'<a href="#{i}">{esc(t.replace(chr(96), ""))}</a>' for i, t in heads) + "</nav>"
+        toc = f"<nav class='toc' aria-label='{t['toc']}'><b>{t['toc']}</b>" + "".join(f'<a href="#{i}">{esc(x.replace(chr(96), ""))}</a>' for i, x in heads) + "</nav>"
+    panels = [("leccion", toc + lec + versiones(p, vers))]
+    if "esquema" in sec: panels.append(("esquema", render_esquema(sec["esquema"], lroot)))
+    if "test" in sec: panels.append(("test", render_test(sec["test"], t, lroot)))
+    if "prueba" in sec: panels.append(("prueba", render_prueba(sec["prueba"], t, lroot)))
+    tabs = ""
+    if len(panels) > 1:
+        tabs = (f'<div class="tabs" role="tablist" aria-label="{t["tabl"]}">' + "".join(
+            f'<button type="button" role="tab" id="t-{k}" aria-controls="p-{k}" aria-selected="{"true" if n == 0 else "false"}">{t["tabs"][k]}</button>'
+            for n, (k, _) in enumerate(panels)) + "</div>")
+    body = "".join(f'<section id="p-{k}" class="panel" role="tabpanel" aria-labelledby="t-{k}" tabindex="0"><h2 class="ph">{t["tabs"][k]}</h2>{h}</section>'
+                   for k, h in panels)
     idx = [x for x in pages if x["sec"] == p["sec"]]
     k = idx.index(p)
     prev = f'<a href="{base}{idx[k-1]["url"]}">← {esc(idx[k-1]["title"])}</a>' if k else "<span></span>"
     nxt = f'<a href="{base}{idx[k+1]["url"]}">{esc(idx[k+1]["title"])} →</a>' if k + 1 < len(idx) else "<span></span>"
-    upd = p["updated"] or date.today().isoformat()
-    main = (f'<article><p class="crumb"><a href="{base}index.html">Inicio</a> / {esc(p["stitle"])}</p><h1>{esc(p["title"])}</h1>'
-            f'<p class="lead">{esc(p["desc"])}</p>{toc}{body}{versiones(p, vers)}'
-            f'<p class="meta">Revisado: {esc(upd)}</p><div class="pn">{prev}{nxt}</div></article>')
-    ld = ('<script type="application/ld+json">' + json.dumps({
-        "@context": "https://schema.org", "@type": "TechArticle", "headline": p["title"], "description": p["desc"],
-        "inLanguage": "es", "dateModified": upd, **({"url": f"{SITE_URL}/{p['url']}"} if SITE_URL else {})
-    }, ensure_ascii=False) + "</script>")
-    return shell(pages, base, p, p["title"], p["desc"], main, p["url"], ld)
+    main = (f'<article><p class="crumb"><a href="{base}{purl(lang, "index.html")}">{t["home"]}</a> / {esc(p["stitle"])}</p><h1>{esc(p["title"])}</h1>'
+            f'<p class="lead">{esc(p["desc"])}</p>{tabs}{body}'
+            f'<p class="meta">{t["rev"]}: <time datetime="{p["mod"]}">{p["mod"]}</time> · <a href="{base}{p["url"][:-5]}.md">{t["md"]}</a></p><div class="pn">{prev}{nxt}</div></article>')
+    ld = ""
+    if SITE_URL:
+        u = canon(lang, p["rel"])
+        g = [{"@type": "TechArticle", "@id": u + "#article", "headline": p["title"], "description": p["desc"], "inLanguage": lang,
+              "datePublished": p["created"], "dateModified": p["mod"], "mainEntityOfPage": u, "url": u,
+              "author": {"@id": SITE_URL + "/#org"}, "publisher": {"@id": SITE_URL + "/#org"}, "isPartOf": {"@id": SITE_URL + "/#site"},
+              "image": SITE_URL + "/assets/og.png", "about": p["stitle"]},
+             {"@type": "BreadcrumbList", "itemListElement": [
+                 {"@type": "ListItem", "position": 1, "name": t["home"], "item": canon(lang, "index.html")},
+                 {"@type": "ListItem", "position": 2, "name": p["stitle"]},
+                 {"@type": "ListItem", "position": 3, "name": p["title"], "item": u}]},
+             {"@type": "Organization", "@id": SITE_URL + "/#org", "name": SITE, "url": SITE_URL + "/", "logo": SITE_URL + "/assets/icon.svg"},
+             {"@type": "WebSite", "@id": SITE_URL + "/#site", "name": SITE, "url": SITE_URL + "/", "publisher": {"@id": SITE_URL + "/#org"}}]
+        ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False) + "</script>"
+    return shell(lang, pages, base, p, p["title"], p["desc"], main, p["rel"], alts, ld, p["url"][:-5] + ".md")
 
-def portada(pages, vers):
+def portada(lang, pages, vers, alts):
+    t = T[lang]
+    base = "../" * (0 if lang == DEFAULT else 1)
     cards = []
-    for sec, st, d in SECCIONES:
+    for sec, st, d in t["secs"]:
         ps = [p for p in pages if p["sec"] == sec]
         if not ps: continue
-        li = "".join(f'<li><a href="{x["url"]}">{esc(x["title"])}</a></li>' for x in ps[:5])
-        mas = f' <a class="more" href="{ps[0]["url"]}">Ver los {len(ps)} →</a>' if len(ps) > 5 else ""
+        li = "".join(f'<li><a href="{base}{x["url"]}">{esc(x["title"])}</a></li>' for x in ps[:5])
+        mas = f' <a class="more" href="{base}{ps[0]["url"]}">{t["see_all"].format(n=len(ps))}</a>' if len(ps) > 5 else ""
         cards.append(f"<section class='card'><h2>{esc(st)}</h2><p>{esc(d)}</p><ul>{li}</ul>{mas}</section>")
-    main = (f"<div class='hero'><h1>{SITE}</h1><p class='lead'>{LEMA}. Resúmenes cortos, con código que se copia y "
-            f"los fallos típicos. Se genera como sitio estático y se contrasta cada semana con la documentación oficial "
-            f"(última comprobación: {esc(vers.get('checked', '—'))}).</p></div><div class='grid'>{''.join(cards)}</div>")
-    return shell(pages, "", None, SITE, LEMA + ". Guías breves de Lit, JS/TS, React, Angular, IA, seguridad y SEO/GEO.", main, "index.html")
+    main = (f"<div class='hero'><h1>{SITE}</h1><p class='lead'>{t['lema']}. {t['hero'].format(d=esc(vers.get('checked', '—')))}</p></div>"
+            f"<div class='grid'>{''.join(cards)}</div>")
+    ld = ""
+    if SITE_URL:
+        g = [{"@type": "WebSite", "@id": SITE_URL + "/#site", "name": SITE, "url": SITE_URL + "/", "inLanguage": list(LANGS), "description": t["lema"],
+              "publisher": {"@id": SITE_URL + "/#org"}},
+             {"@type": "Organization", "@id": SITE_URL + "/#org", "name": SITE, "url": SITE_URL + "/", "logo": SITE_URL + "/assets/icon.svg"}]
+        ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False) + "</script>"
+    return shell(lang, pages, base, None, SITE, t["homed"], main, "index.html", alts, ld)
 
-def novedades(pages, vers):
+def novedades(lang, pages, vers, alts):
+    t = T[lang]
+    base = "../" * (0 if lang == DEFAULT else 1)
     path = ROOT / "data" / "fuentes.json"
     src = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     rows = "".join(f"<tr><td><a href='{esc(v.get('url',''))}' rel='noopener' target='_blank'>{esc(k)}</a></td><td>{esc(v.get('ultimo','—'))}</td></tr>"
                    for k, v in src.get("fuentes", {}).items())
-    main = (f"<article><h1>Novedades vigiladas</h1><p class='lead'>Último dato de cada fuente oficial, comprobado el {esc(vers.get('checked','—'))}. "
-            f"Un flujo semanal compara y abre una incidencia si algo cambia.</p>"
-            f"<div class='tbl'><table><thead><tr><th>Fuente</th><th>Último dato</th></tr></thead><tbody>{rows}</tbody></table></div></article>")
-    return shell(pages, "", None, "Novedades", "Fuentes oficiales vigiladas", main, "novedades.html")
+    main = (f"<article><h1>{t['newt']}</h1><p class='lead'>{t['newl'].format(d=esc(vers.get('checked','—')))}</p>"
+            f"<div class='tbl'><table><thead><tr><th>{t['src']}</th><th>{t['last']}</th></tr></thead><tbody>{rows}</tbody></table></div></article>")
+    return shell(lang, pages, base, None, t["newt"], t["newt"], main, "novedades.html", alts)
+
+def no_encontrada(pages):
+    t = T[DEFAULT]
+    main = f"<article><h1>{t['nf']}</h1><p class='lead'>{t['nfp']}</p><p><a href='{PREFIX}index.html'>{t['home']}</a></p></article>"
+    return shell(DEFAULT, pages, PREFIX, None, t["nf"], t["nfp"], main, "404.html", {}).replace(
+        '<meta name="robots" content="index,follow', '<meta name="robots" content="noindex,follow')
 
 def main():
     if OUT.exists(): shutil.rmtree(OUT)
@@ -225,35 +410,57 @@ def main():
     shutil.copytree(ROOT / "assets", OUT / "assets")
     vp = ROOT / "data" / "versions.json"
     vers = json.loads(vp.read_text(encoding="utf-8")) if vp.exists() else {}
-    pages = cargar()
-    ok = {p["url"][:-5] for p in pages}
-    mal = [(p["url"], m) for p in pages for m in re.findall(r"\(@/([^)]+)\)", p["body"]) if m not in ok]
-    if mal:
-        sys.exit("Enlaces rotos: " + ", ".join(f"{a} -> {b}" for a, b in mal))
-    (OUT / "index.html").write_text(portada(pages, vers), encoding="utf-8")
-    (OUT / "novedades.html").write_text(novedades(pages, vers), encoding="utf-8")
-    idx = []
-    for p in pages:
-        (OUT / p["sec"]).mkdir(exist_ok=True)
-        (OUT / p["url"]).write_text(pagina(p, pages, vers), encoding="utf-8")
-        txt = re.sub(r"```.*?```", " ", p["body"], flags=re.S)
-        txt = re.sub(r"[#*`|>\[\]()-]+", " ", txt)
-        idx.append(dict(t=p["title"], s=p["stitle"], u=p["url"], d=p["desc"], x=re.sub(r"\s+", " ", txt)[:1500]))
-    (OUT / "search.json").write_text(json.dumps(idx, ensure_ascii=False), encoding="utf-8")
-    (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n" + (f"Sitemap: {SITE_URL}/sitemap.xml\n" if SITE_URL else ""))
-    llms = [f"# {SITE}", f"> {LEMA}. Guías breves y verificadas contra documentación oficial.", ""]
-    for sec, st, d in SECCIONES:
-        ps = [p for p in pages if p["sec"] == sec]
-        if ps:
-            llms.append(f"## {st}")
-            llms += [f"- [{p['title']}]({SITE_URL + '/' if SITE_URL else ''}{p['url']}): {p['desc']}" for p in ps]
+    allp = {l: cargar(l) for l in LANGS}
+    for l in LANGS:
+        CALLOUTS.update(T[l]["callouts"]) if l == DEFAULT else None
+    for l, pages in allp.items():
+        ok = {p["rel"][:-5] for p in pages}
+        mal = [(p["url"], m) for p in pages for m in re.findall(r"\(@/([^)]+)\)", p["body"]) if m not in ok]
+        if mal:
+            sys.exit("Enlaces rotos: " + ", ".join(f"{a} -> {b}" for a, b in mal))
+    exist = {(p["lang"], p["rel"]) for ps in allp.values() for p in ps} | {(l, r) for l in LANGS for r in ("index.html", "novedades.html")}
+    def alts(rel): return {l: rel for l in LANGS if (l, rel) in exist}
+    sitemap, llms, full = [], [f"# {SITE}", f"> {T[DEFAULT]['lema']}. Short guides checked against official documentation.", ""], []
+    for l, pages in allp.items():
+        CALLOUTS.update(T[l]["callouts"])
+        if l != DEFAULT: (OUT / l).mkdir(exist_ok=True)
+        (OUT / purl(l, "index.html")).write_text(portada(l, pages, vers, alts("index.html")), encoding="utf-8")
+        (OUT / purl(l, "novedades.html")).write_text(novedades(l, pages, vers, alts("novedades.html")), encoding="utf-8")
+        idx = []
+        llms += [f"## {LANGS[l][0]}", ""]
+        for sec, st, _ in T[l]["secs"]:
+            ps = [p for p in pages if p["sec"] == sec]
+            if not ps: continue
+            llms.append(f"### {st}")
+            for p in ps:
+                (OUT / purl(l, sec)).mkdir(parents=True, exist_ok=True)
+                (OUT / p["url"]).write_text(pagina(p, pages, vers, alts(p["rel"])), encoding="utf-8")
+                md_text = f"# {p['title']}\n\n> {p['desc']}\n\nURL: {canon(l, p['rel']) if SITE_URL else p['url']}\nUpdated: {p['mod']}\n\n{p['body']}\n"
+                (OUT / (p["url"][:-5] + ".md")).write_text(md_text, encoding="utf-8")
+                full.append(md_text)
+                llms.append(f"- [{p['title']}]({(SITE_URL + '/' if SITE_URL else '')}{p['url'][:-5]}.md): {p['desc']}")
+                txt = re.sub(r"```.*?```", " ", split_sections(p["body"])["leccion"], flags=re.S)
+                txt = re.sub(r"[#*`|>\[\]()-]+", " ", txt)
+                idx.append(dict(t=p["title"], s=p["stitle"], u=p["url"], d=p["desc"], x=re.sub(r"\s+", " ", txt)[:1500]))
+                sitemap.append((p["rel"], l, p["mod"]))
             llms.append("")
+        (OUT / purl(l, "search.json")).write_text(json.dumps(idx, ensure_ascii=False), encoding="utf-8")
+        sitemap += [("index.html", l, vers.get("checked", "")), ("novedades.html", l, vers.get("checked", ""))]
+    (OUT / "404.html").write_text(no_encontrada(allp[DEFAULT]), encoding="utf-8")
     (OUT / "llms.txt").write_text("\n".join(llms), encoding="utf-8")
+    (OUT / "llms-full.txt").write_text("\n\n---\n\n".join(full), encoding="utf-8")
+    bots = "".join(f"User-agent: {b}\nAllow: /\n\n" for b in
+                   ("*", "OAI-SearchBot", "ChatGPT-User", "GPTBot", "ClaudeBot", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Google-Extended", "Applebot-Extended"))
+    (OUT / "robots.txt").write_text(bots + (f"Sitemap: {SITE_URL}/sitemap.xml\n" if SITE_URL else ""))
     if SITE_URL:
-        urls = ["index.html", "novedades.html"] + [p["url"] for p in pages]
-        (OUT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-            + "".join(f"<url><loc>{SITE_URL}/{u}</loc></url>" for u in urls) + "</urlset>")
-    print(f"{len(pages)} páginas -> {OUT}")
+        urls = []
+        for rel, l, mod in sitemap:
+            al = "".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{canon(x, rel)}"/>' for x in alts(rel))
+            if DEFAULT in alts(rel): al += f'<xhtml:link rel="alternate" hreflang="x-default" href="{canon(DEFAULT, rel)}"/>'
+            urls.append(f"<url><loc>{canon(l, rel)}</loc><lastmod>{mod}</lastmod>{al}</url>")
+        (OUT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+                                         'xmlns:xhtml="http://www.w3.org/1999/xhtml">' + "".join(urls) + "</urlset>")
+    print(", ".join(f"{l}: {len(p)} páginas" for l, p in allp.items()), "->", OUT)
 
 if __name__ == "__main__":
     main()

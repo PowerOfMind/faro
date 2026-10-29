@@ -35,3 +35,29 @@ Los datos estructurados describen la página en un formato que las máquinas lee
 
 > [!AI] Cuidado
 > La IA inventa propiedades o ratings. No marques valoraciones que no existen: es contra las políticas y arriesgas acción manual.
+
+=== esquema
+# Fundamentos
+- JSON-LD — formato recomendado, en el head.
+- schema.org — vocabulario de tipos.
+# Tipos
+- Article y TechArticle — guías y artículos.
+- BreadcrumbList — migas de pan.
+- Organization y WebSite — la entidad y el sitio.
+- Product — con Offer y valoraciones reales.
+=== test
+? ¿Qué marcas con datos estructurados?
+* Solo lo que se ve en la página
+- Datos ocultos para posicionar mejor
+- Valoraciones inventadas
+! Marcar lo invisible va contra las políticas.
+? ¿Cómo validas el marcado?
+- A ojo
+* Rich Results Test y Schema Markup Validator
+- Con un linter de CSS
+! Detectan errores y propiedades no válidas.
+? ¿Cuál es el formato recomendado?
+* JSON-LD
+- Microdatos solo
+- XML antiguo
+! Es independiente del HTML visible.

@@ -39,3 +39,29 @@ Si los pasos son fijos, un script o un flujo con una sola llamada al modelo es m
 
 > [!TIP] Subagentes
 > Para investigar o leer mucho, lanza un subagente: gasta su propio contexto y devuelve solo el resumen.
+
+=== esquema
+# Concepto
+- Agente — un modelo en bucle con herramientas.
+- Bucle — decide, usa una herramienta, lee el resultado, repite.
+# Control
+- Tope de pasos y gasto — siempre.
+- Mínimo privilegio — herramientas de lectura por defecto.
+- Validar argumentos — como si vinieran de un usuario hostil.
+- Evaluar — casos reales repetidos tras cada cambio.
+=== test
+? ¿Cuándo NO usar un agente?
+- Cuando el camino depende de lo que encuentres
+* Cuando los pasos son fijos y conocidos
+- Nunca; siempre conviene
+! Un script o una sola llamada al modelo es más barato y predecible si el flujo es fijo.
+? ¿Qué limitas siempre en un agente?
+* El número de pasos y el gasto
+- Solo el color de la UI
+- Nada, para que sea libre
+! Un bucle sin tope puede gastar sin control.
+? ¿Cómo tratas los argumentos que el modelo pasa a una herramienta?
+- Como datos de confianza
+* Como entrada no fiable que hay que validar
+- No hace falta mirarlos
+! Pueden venir de una inyección de prompt.

@@ -38,3 +38,28 @@ echo "22" > .nvmrc      # y "engines" en package.json
 
 ## Cachés
 Service worker, caché del navegador y CDN te muestran código viejo. Desregistra el SW y haz recarga forzada antes de decir "no cambia".
+
+=== esquema
+# CORS
+- Se arregla en el servidor — cabeceras Allow-Origin y respuesta a OPTIONS.
+- Proxy en desarrollo — evita CORS sin tocar el servidor.
+# Entorno
+- Variables VITE_ / NEXT_PUBLIC_ — llegan al navegador y son públicas.
+- Variables en build — cambiarlas exige reconstruir.
+- Node distinto — .nvmrc y engines.
+=== test
+? ¿Dónde se arregla un error de CORS?
+- En el cliente con fetch
+* En el servidor, con las cabeceras adecuadas
+- En el CSS
+! El navegador bloquea la respuesta según las cabeceras que envía el servidor.
+? ¿Puede ir un secreto en una variable VITE_API_KEY?
+- Sí, si es privado
+* No: llega al navegador y es pública
+- Solo en producción
+! Todo lo que expone el bundler es visible para cualquiera.
+? En Windows falla un script .sh con \r. ¿Causa probable?
+* Finales de línea CRLF
+- Falta de RAM
+- Versión de Node
+! Configura .gitattributes con text=auto.

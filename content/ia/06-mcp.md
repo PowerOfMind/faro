@@ -27,3 +27,28 @@ claude mcp list
 
 ## Crear el tuyo
 SDK oficial en TypeScript y Python. Define cada herramienta con nombre claro, descripción de cuándo usarla y esquema de entrada validado.
+
+=== esquema
+# Qué es
+- MCP — estándar abierto para conectar herramientas y datos a un agente.
+- Servidor MCP — expone herramientas, recursos y prompts.
+# Cuidado
+- Es código que ejecutas — instala solo de autores que conoces.
+- Credenciales mínimas — token de solo lectura si basta.
+- Cada herramienta ocupa contexto — activa solo las que usas.
+=== test
+? ¿Qué es un servidor MCP?
+* Un programa que expone herramientas y datos a un agente por un protocolo común
+- Un tipo de base de datos
+- Un modelo de IA nuevo
+! Es la interfaz estándar entre el agente y los sistemas externos.
+? ¿Por qué ser prudente al instalar uno?
+- Porque son lentos
+* Porque ejecuta código con los permisos que le des
+- Porque caducan cada semana
+! Trátalo como cualquier dependencia con acceso a tus datos.
+? Si existe una CLI fiable (gh, psql), ¿qué suele convenir?
+* Usarla: ocupa menos contexto que un servidor con muchas herramientas
+- Instalar siempre el servidor
+- Escribir tu propio protocolo
+! Cada herramienta descrita consume contexto.

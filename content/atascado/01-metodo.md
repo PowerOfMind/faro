@@ -34,3 +34,29 @@ Ya probé: <1>, <2>
 
 > [!TIP] Bisección
 > Si "antes funcionaba": `git bisect` o vuelve al último commit bueno y reaplica los cambios de uno en uno.
+
+=== esquema
+# Método
+- Reproducir en pequeño — un fichero mínimo que falle.
+- Una hipótesis, una prueba — cambia una cosa a la vez.
+- Medir — log del valor real y versión instalada.
+# Si sigue
+- Buscar el mensaje literal — en los issues del proyecto.
+- Reiniciar la conversación — con versiones, código mínimo y lo descartado.
+- git bisect — si antes funcionaba.
+=== test
+? ¿Qué haces antes de pedir otra solución a la IA?
+- Pedir tres arreglos a la vez
+* Reproducir el fallo en un ejemplo mínimo
+- Cambiar de framework
+! Si no puedes reproducirlo en pequeño, aún no entiendes el problema.
+? En un stack trace, ¿qué línea suele indicar la causa?
+* La primera línea de tu propio código
+- La última de librerías
+- La primera de todas
+! Las líneas de librería suelen ser consecuencia de algo que llamaste tú.
+? "Antes funcionaba": ¿qué herramienta ayuda?
+- git blame sobre todo el repo
+* git bisect
+- npm audit
+! Bisect encuentra el commit que rompió algo.

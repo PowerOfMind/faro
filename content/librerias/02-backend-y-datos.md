@@ -35,3 +35,30 @@ pkgs: hono, express, drizzle-orm, prisma, "better-auth", "next-auth"
 
 > [!AI] Con IA
 > Para auth y pagos no aceptes "tu propia implementación". Usa el servicio o librería y limita el trabajo de la IA a la integración.
+
+=== esquema
+# Piezas
+- API — Hono, Express o Fastify.
+- Full-stack — Next.js, SvelteKit, Nuxt, Remix.
+- Datos — PostgreSQL con Drizzle o Prisma.
+- Servicios — Supabase, Neon, Firebase.
+- Pagos — Stripe con webhooks.
+# Reglas
+- Auth gestionada — nunca la tuya propia.
+- Migraciones versionadas — nada a mano en producción.
+=== test
+? Para autenticación, ¿qué conviene?
+* Un servicio o librería probada
+- Tu propia implementación
+- Guardar contraseñas en claro
+! Los fallos sutiles de auth son caros.
+? ¿Cómo cambias el esquema de la BBDD en producción?
+* Con migraciones versionadas
+- A mano en la consola
+- Reiniciando
+! Son reproducibles y reversibles.
+? Hosting de un sitio estático:
+- Solo un VPS
+* GitHub Pages, Cloudflare Pages, Netlify o Vercel
+- Una base de datos
+! Sirven HTML sin servidor propio.

@@ -82,7 +82,6 @@
     };
   });
   addEventListener('hashchange', fromHash);
-  fromHash();
 
   // test
   function shuffle(box) {
@@ -183,4 +182,5 @@
     } else if (e.key === 'Enter' && a[Math.max(sel, 0)]) { location.href = a[Math.max(sel, 0)].href; }
   });
   d.addEventListener('click', function (e) { if (!e.target.closest('.search')) closeRes(); });
+  fromHash();
 })();

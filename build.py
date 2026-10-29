@@ -305,12 +305,17 @@ def render_test(txt, t, base):
     return (f'<div class="quiz" data-score="{t["score"]}" data-ok="{t["ok"]}" data-ko="{t["ko"]}"><ol>{"".join(items)}</ol>'
             f'<p class="score" aria-live="polite"></p><button type="button" class="retry btn" hidden>{t["retry"]}</button></div>')
 
-def render_prueba(txt, t, base):
+ES_PRUEBA = {}
+
+def render_prueba(txt, t, base, rel=""):
     out = []
-    for g in re.split(r"^## ", txt, flags=re.M)[1:]:
+    fb = re.split(r"^## ", ES_PRUEBA.get(rel, ""), flags=re.M)[1:]
+    for n, g in enumerate(re.split(r"^## ", txt, flags=re.M)[1:]):
         title, _, rest = g.partition("\n")
         code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", rest, re.S)}
-        desc = rest.split("```")[0].strip()
+        if not code and n < len(fb):   # traducción sin código: se reutiliza el del original
+            code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", fb[n], re.S)}
+        desc = re.split(r"^(?:Reto|Clave): ", rest.split("```")[0], flags=re.M)[0].strip()
         reto = re.search(r"^Reto: (.*)$", rest, re.M); clave = re.search(r"^Clave: (.*)$", rest, re.M)
         out.append(
             f'<section class="try"><h3>{inline(title, base)}</h3><p>{inline(desc, base)}</p>'
@@ -336,7 +341,7 @@ def pagina(p, pages, vers, alts):
     panels = [("leccion", toc + lec + versiones(p, vers))]
     if "esquema" in sec: panels.append(("esquema", render_esquema(sec["esquema"], lroot)))
     if "test" in sec: panels.append(("test", render_test(sec["test"], t, lroot)))
-    if "prueba" in sec: panels.append(("prueba", render_prueba(sec["prueba"], t, lroot)))
+    if "prueba" in sec: panels.append(("prueba", render_prueba(sec["prueba"], t, lroot, p["rel"])))
     tabs = ""
     if len(panels) > 1:
         tabs = (f'<div class="tabs" role="tablist" aria-label="{t["tabl"]}">' + "".join(
@@ -411,6 +416,8 @@ def main():
     vp = ROOT / "data" / "versions.json"
     vers = json.loads(vp.read_text(encoding="utf-8")) if vp.exists() else {}
     allp = {l: cargar(l) for l in LANGS}
+    for p in allp[DEFAULT]:
+        ES_PRUEBA[p["rel"]] = split_sections(p["body"]).get("prueba", "")
     for l in LANGS:
         CALLOUTS.update(T[l]["callouts"]) if l == DEFAULT else None
     for l, pages in allp.items():

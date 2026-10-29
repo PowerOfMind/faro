@@ -1,0 +1,45 @@
+{
+ "fuentes": {
+  "Lit (releases)": {
+   "url": "https://github.com/lit/lit/releases.atom",
+   "ultimo": "@lit-labs/ssr-dom-shim@1.6.0"
+  },
+  "React (blog)": {
+   "url": "https://react.dev/rss.xml",
+   "ultimo": "React 19.3"
+  },
+  "Angular (blog)": {
+   "url": "https://blog.angular.dev/feed",
+   "ultimo": "From running edge-rendered Angular apps on Cloudflare Workers to crafting lifelike speech with…"
+  },
+  "TypeScript (releases)": {
+   "url": "https://github.com/microsoft/TypeScript/releases.atom",
+   "ultimo": "TypeScript 7.1 Beta"
+  },
+  "Vite (releases)": {
+   "url": "https://github.com/vitejs/vite/releases.atom",
+   "ultimo": "create-vite@9.3.3"
+  },
+  "Claude Code (releases)": {
+   "url": "https://github.com/anthropics/claude-code/releases.atom",
+   "ultimo": "v2.1.312"
+  },
+  "Model Context Protocol (releases)": {
+   "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom",
+   "ultimo": "2026-07-28"
+  },
+  "OWASP Top 10 LLM (releases)": {
+   "url": "https://github.com/OWASP/www-project-top-10-for-large-language-model-applications/releases.atom",
+   "ultimo": "OWASP Top 10 for Large Language Model Applications - 2025"
+  },
+  "web.dev (blog)": {
+   "url": "https://web.dev/feed.xml",
+   "ultimo": "New to the web platform in September"
+  },
+  "Chrome for Developers (blog)": {
+   "url": "https://developer.chrome.com/static/blog/feed.xml",
+   "ultimo": "What's New in WebGPU (Chrome 155-156)"
+  }
+ },
+ "checked": "2026-10-29"
+}

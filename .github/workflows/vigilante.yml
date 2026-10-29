@@ -1,0 +1,27 @@
+name: Vigilar novedades
+on:
+  schedule: [{ cron: "0 6 * * 1" }]   # lunes 06:00 UTC
+  workflow_dispatch:
+permissions: { contents: write, issues: write, actions: write }
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python tools/check_updates.py
+      - name: Guardar datos y avisar
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          git config user.name "faro-vigilante"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/versions.json data/fuentes.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Datos de versiones y fuentes: comprobación semanal"
+            git push
+            gh workflow run pages.yml
+          fi
+          if [ -f data/changes.md ]; then
+            gh issue create --title "Novedades por revisar ($(date +%F))" --body-file data/changes.md
+          fi

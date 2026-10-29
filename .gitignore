@@ -1,0 +1,4 @@
+dist/
+__pycache__/
+data/changes.md
+.env*

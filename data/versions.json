@@ -1,0 +1,101 @@
+{
+ "checked": "2026-10-29",
+ "pkgs": {
+  "@angular/cli": {
+   "v": "22.2.5"
+  },
+  "@angular/core": {
+   "v": "22.2.3"
+  },
+  "@anthropic-ai/sdk": {
+   "v": "1.3.0"
+  },
+  "@lit-labs/ssr": {
+   "v": "4.1.0"
+  },
+  "@lit/context": {
+   "v": "1.1.6"
+  },
+  "@lit/react": {
+   "v": "1.0.8"
+  },
+  "@lit/task": {
+   "v": "1.0.3"
+  },
+  "@modelcontextprotocol/sdk": {
+   "v": "1.32.2"
+  },
+  "@tanstack/react-query": {
+   "v": "5.105.0"
+  },
+  "@web/test-runner": {
+   "v": "1.0.0"
+  },
+  "ai": {
+   "v": "7.0.156"
+  },
+  "better-auth": {
+   "v": "1.7.14"
+  },
+  "date-fns": {
+   "v": "4.4.0"
+  },
+  "drizzle-orm": {
+   "v": "0.45.4"
+  },
+  "eslint": {
+   "v": "10.13.0"
+  },
+  "express": {
+   "v": "5.3.0"
+  },
+  "hono": {
+   "v": "4.13.14"
+  },
+  "langchain": {
+   "v": "1.6.0"
+  },
+  "lit": {
+   "v": "3.3.3"
+  },
+  "next": {
+   "v": "16.4.3"
+  },
+  "next-auth": {
+   "v": "4.24.15"
+  },
+  "openai": {
+   "v": "7.45.1"
+  },
+  "playwright": {
+   "v": "1.64.1"
+  },
+  "prisma": {
+   "v": "8.0.0-rc.28"
+  },
+  "react": {
+   "v": "19.3.1"
+  },
+  "react-dom": {
+   "v": "19.3.1"
+  },
+  "tailwindcss": {
+   "v": "4.3.3"
+  },
+  "typescript": {
+   "v": "7.0.2"
+  },
+  "vite": {
+   "v": "8.3.5"
+  },
+  "vitest": {
+   "v": "5.0.5"
+  },
+  "zod": {
+   "v": "4.6.7"
+  },
+  "zustand": {
+   "v": "5.0.16"
+  }
+ }
+}

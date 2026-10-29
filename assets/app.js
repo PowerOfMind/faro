@@ -9,7 +9,7 @@
   $('#theme').onclick = function () {
     var cur = d.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
     var n = cur === 'dark' ? 'light' : 'dark';
-    d.documentElement.dataset.theme = n; store('faro-theme', n);
+    d.documentElement.dataset.theme = n; store('lighthub-theme', n);
   };
 
   // menú móvil
@@ -126,15 +126,15 @@
     var doc = '<!doctype html><html><head><meta charset="utf-8"><script type="importmap">' + JSON.stringify(IMPORTS) + '<\/script>' +
       '<style>:root{' + vars + '}body{font:15px/1.5 system-ui;color:var(--text);background:var(--surface);margin:0;padding:12px}button{font:inherit;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);cursor:pointer}pre{white-space:pre-wrap;background:var(--surface-2);padding:8px;border-radius:8px}</style>' +
       '<script>(function(){function s(a){return a.map(function(x){try{return typeof x==="string"?x:JSON.stringify(x)}catch(e){return String(x)}}).join(" ")}' +
-      '["log","warn","error"].forEach(function(k){var o=console[k];console[k]=function(){parent.postMessage({faro:' + id + ',k:k,t:s([].slice.call(arguments))},"*");o.apply(console,arguments)}});' +
-      'addEventListener("error",function(e){parent.postMessage({faro:' + id + ',k:"error",t:e.message},"*")})})()<\/script></head><body>' +
+      '["log","warn","error"].forEach(function(k){var o=console[k];console[k]=function(){parent.postMessage({lighthub:' + id + ',k:k,t:s([].slice.call(arguments))},"*");o.apply(console,arguments)}});' +
+      'addEventListener("error",function(e){parent.postMessage({lighthub:' + id + ',k:"error",t:e.message},"*")})})()<\/script></head><body>' +
       $('.th', sec).value + '<script type="module">' + js + '<\/script></body></html>';
     var con = $('.con', sec); con.textContent = ''; con.hidden = true;
     $('.out', sec).srcdoc = doc;
   }
   addEventListener('message', function (e) {
-    if (!e.data || !e.data.faro) return;
-    var sec = $$('.try').filter(function (s) { return s.dataset.id === String(e.data.faro); })[0]; if (!sec) return;
+    if (!e.data || !e.data.lighthub) return;
+    var sec = $$('.try').filter(function (s) { return s.dataset.id === String(e.data.lighthub); })[0]; if (!sec) return;
     var con = $('.con', sec); con.hidden = false;
     var line = d.createElement('div'); if (e.data.k === 'error') line.className = 'e'; line.textContent = e.data.t; con.appendChild(line);
   });
@@ -185,8 +185,8 @@
   d.addEventListener('click', function (e) { if (!e.target.closest('#q,#res')) closeRes(); });
   // lo leído: se guarda en el navegador y alimenta marcas y progreso
   var seen = {};
-  try { seen = JSON.parse(store('faro-seen') || '{}'); } catch (e) {}
-  if (b.dataset.k) { seen[b.dataset.k] = 1; store('faro-seen', JSON.stringify(seen)); }
+  try { seen = JSON.parse(store('lighthub-seen') || '{}'); } catch (e) {}
+  if (b.dataset.k) { seen[b.dataset.k] = 1; store('lighthub-seen', JSON.stringify(seen)); }
   $$('.trow').forEach(function (a) { if (seen[a.dataset.k]) a.classList.add('seen'); });
   $$('.card[data-sec]').forEach(function (c) {
     var rows = $$('#side .grp[data-sec="' + c.dataset.sec + '"] .trow'), n = 0, next = null;

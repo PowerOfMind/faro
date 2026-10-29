@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "dist"
-SITE = "Faro"
+SITE = "LightHub"
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 PREFIX = urlparse(SITE_URL).path.rstrip("/") + "/" if SITE_URL else "/"   # para el 404
 DEFAULT = "es"
@@ -250,7 +250,7 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="",
 <meta name="twitter:card" content="summary_large_image">{''.join(head)}
 <meta name="theme-color" content="#0d1117"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{base}assets/style.css">{ld}
-<script>document.documentElement.className='js';try{{var t=localStorage.getItem('faro-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
+<script>document.documentElement.className='js';try{{var t=localStorage.getItem('lighthub-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 </head><body{' class="has-tabs"' if tabs else ''} data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}"{cur_k}>
 <a class="skip" href="#main">{t['skip']}</a>
 <aside id="side"><div class="side-h"><a href="{home}"><small>{esc(t['lema'])}</small><strong>{logo}{SITE}</strong></a></div>

@@ -8,7 +8,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-UA = {"User-Agent": "faro-vigilante/1.0 (+https://github.com)"}
+UA = {"User-Agent": "lighthub-vigilante/1.0 (+https://github.com)"}
 
 def get(url, timeout=20):
     with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as r:

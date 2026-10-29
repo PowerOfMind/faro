@@ -1,1 +1,1 @@
-{"version":"0.0.1","configurations":[{"name":"faro","runtimeExecutable":"python","runtimeArgs":["-m","http.server","8793","-d","dist"],"port":8793}]}
+{"version":"0.0.1","configurations":[{"name":"lighthub","runtimeExecutable":"python","runtimeArgs":["-m","http.server","8793","-d","dist"],"port":8793}]}

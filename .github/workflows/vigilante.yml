@@ -14,7 +14,7 @@ jobs:
       - name: Guardar datos y avisar
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
-          git config user.name "faro-vigilante"
+          git config user.name "lighthub-vigilante"
           git config user.email "actions@users.noreply.github.com"
           git add data/versions.json data/fuentes.json
           if ! git diff --cached --quiet; then

@@ -16,7 +16,7 @@
   var menu = $('#menu'), scrim = $('#scrim');
   function toggle(open) {
     b.classList.toggle('open', open); scrim.hidden = !open;
-    menu.setAttribute('aria-expanded', open); if (open) $('#nav a').focus({ preventScroll: true });
+    menu.setAttribute('aria-expanded', open); if (open) $('#nav .trow').focus({ preventScroll: true });
   }
   menu.onclick = function () { toggle(!b.classList.contains('open')); };
   scrim.onclick = function () { toggle(false); };
@@ -88,11 +88,11 @@
     var o = $$('.o', box); o.sort(function () { return Math.random() - .5; }).forEach(function (x) { box.appendChild(x); });
   }
   $$('.quiz').forEach(function (qz) {
-    var qs = $$('.q', qz), score = $('.score', qz), retry = $('.retry', qz), right = 0, done = 0;
+    var qs = $$('.q', qz), score = $('.score', qz), retry = $('.retry', qz), bar = $('.bar i', qz), right = 0, done = 0;
     function reset() {
-      right = 0; done = 0; score.textContent = ''; retry.hidden = true;
+      right = 0; done = 0; score.textContent = ''; retry.hidden = true; bar.style.width = '0';
       qs.forEach(function (q) {
-        $$('.o', q).forEach(function (o) { o.disabled = false; o.className = 'o'; }); $('.fb', q).hidden = true; q.dataset.done = ''; shuffle($('.opts', q));
+        $$('.o', q).forEach(function (o) { o.disabled = false; o.className = 'o opt'; }); $('.fb', q).hidden = true; q.dataset.done = ''; shuffle($('.opts', q));
       });
     }
     qs.forEach(function (q) {
@@ -103,6 +103,7 @@
           $$('.o', q).forEach(function (x) { x.disabled = true; if (x.hasAttribute('data-c')) x.classList.add('ok'); });
           if (!good) o.classList.add('ko');
           var fb = $('.fb', q); fb.hidden = false; fb.textContent = (good ? qz.dataset.ok : qz.dataset.ko) + ' ' + fb.textContent.replace(/^(¡Correcto!|Incorrecto\.|Correct!|Not quite\.) /, '');
+          bar.style.width = (done / qs.length * 100) + '%';
           if (done === qs.length) { score.textContent = qz.dataset.score + ': ' + right + '/' + qs.length; retry.hidden = false; }
         };
       });
@@ -181,6 +182,20 @@
       a.forEach(function (x, i) { x.classList.toggle('on', i === sel); });
     } else if (e.key === 'Enter' && a[Math.max(sel, 0)]) { location.href = a[Math.max(sel, 0)].href; }
   });
-  d.addEventListener('click', function (e) { if (!e.target.closest('.search')) closeRes(); });
+  d.addEventListener('click', function (e) { if (!e.target.closest('#q,#res')) closeRes(); });
+  // lo leído: se guarda en el navegador y alimenta marcas y progreso
+  var seen = {};
+  try { seen = JSON.parse(store('faro-seen') || '{}'); } catch (e) {}
+  if (b.dataset.k) { seen[b.dataset.k] = 1; store('faro-seen', JSON.stringify(seen)); }
+  $$('.trow').forEach(function (a) { if (seen[a.dataset.k]) a.classList.add('seen'); });
+  $$('.card[data-sec]').forEach(function (c) {
+    var rows = $$('#side .grp[data-sec="' + c.dataset.sec + '"] .trow'), n = 0, next = null;
+    rows.forEach(function (a) { if (seen[a.dataset.k]) n++; else if (!next) next = a; });
+    $('.bar i', c).style.width = (rows.length ? n / rows.length * 100 : 0) + '%';
+    var rd = $('.rd', c); rd.textContent = rd.dataset.tpl.replace('{a}', n).replace('{b}', rows.length);
+    var go = $('.go', c);
+    if (n && next) { go.href = next.href; go.textContent = go.dataset.cont; }
+  });
+  var cur = $('#side .trow.cur'), side = $('#side'); if (cur) side.scrollTop = Math.max(0, cur.offsetTop - side.clientHeight / 3);
   fromHash();
 })();

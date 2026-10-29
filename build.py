@@ -185,16 +185,18 @@ def canon(lang, rel):
     return f"{SITE_URL}/{p}"
 
 def sidebar(pages, base, cur, lang):
-    s = [f"<nav id='nav' aria-label='{esc(T[lang]['homed'][:0] or 'Menú')}'>"]
-    for sec, st, _ in T[lang]["secs"]:
+    t = T[lang]
+    s = [f"<nav id='nav' aria-label='{esc(t['secl'])}'>"]
+    for sec, st, _ in t["secs"]:
         ps = [p for p in pages if p["sec"] == sec]
         if not ps: continue
         op = " open" if cur and cur["sec"] == sec else ""
-        s.append(f"<details{op}><summary>{esc(st)}</summary><ul>")
-        for p in ps:
+        s.append(f'<details class="grp" data-sec="{sec}"{op}><summary><span>{esc(st)}</span><span class="cnt">{len(ps)}</span></summary>')
+        for n, p in enumerate(ps, 1):
             c = ' aria-current="page"' if cur and p is cur else ""
-            s.append(f'<li><a href="{base}{p["url"]}"{c}>{esc(p["title"])}</a></li>')
-        s.append("</ul></details>")
+            k = " cur" if c else ""
+            s.append(f'<a class="trow{k}" data-k="{lang}:{p["rel"]}" href="{base}{p["url"]}"{c}><span class="tn">{n:02d}</span><span class="tt">{esc(p["title"])}</span></a>')
+        s.append("</details>")
     s.append("</nav>")
     return "".join(s)
 
@@ -208,7 +210,15 @@ def versiones(p, vers):
     return (f"<aside class='vers'><b>{t['vers']}</b> ({t['chk']} <time datetime='{esc(vers.get('checked', ''))}'>{esc(vers.get('checked', '—'))}</time>)"
             f"<ul>{''.join(rows)}</ul></aside>")
 
-def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl=""):
+ICONS = dict(
+    leccion='<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
+    esquema='<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M14 14h7"/>',
+    test='<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    prueba='<path d="m8 8-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>')
+
+def svg(path): return f'<svg viewBox="0 0 24 24" aria-hidden="true">{path}</svg>'
+
+def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="", tabs="", kick=""):
     t = T[lang]
     full = f"{title} · {SITE}" if cur else f"{SITE} · {t['lema']}"
     d = html.escape(desc)
@@ -229,6 +239,9 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="")
     langs = "".join(
         f'<a lang="{l}" hreflang="{l}" href="{base}{purl(l, alts[l]) if l in alts else purl(l, "index.html")}"'
         f'{" aria-current=true" if l == lang else ""}>{l.upper()}</a>' for l in LANGS)
+    home = f"{base}{purl(lang, 'index.html')}"
+    logo = '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h-6zM9 9h6l1 11H8zM3 22h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>'
+    cur_k = f' data-k="{lang}:{cur["rel"]}"' if cur else ""
     return f"""<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(full)}</title><meta name="description" content="{d}">
@@ -238,26 +251,31 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="")
 <meta name="theme-color" content="#0d1117"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{base}assets/style.css">{ld}
 <script>document.documentElement.className='js';try{{var t=localStorage.getItem('faro-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
-</head><body data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}">
+</head><body{' class="has-tabs"' if tabs else ''} data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}"{cur_k}>
 <a class="skip" href="#main">{t['skip']}</a>
-<header class="top"><button id="menu" class="ib" aria-controls="nav" aria-expanded="false" aria-label="{t['menu']}">☰</button>
-<a class="brand" href="{base}{purl(lang, 'index.html')}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h-6zM9 9h6l1 11H8zM3 22h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>{SITE}</a>
-<div class="search"><input id="q" type="search" placeholder="{t['search']}" aria-label="{t['searchl']}" autocomplete="off"><ul id="res" hidden></ul></div>
-<nav class="lang" aria-label="{t['lang']}">{langs}</nav>
-<button id="theme" class="ib" aria-label="{t['theme']}">◐</button></header>
-<div class="wrap"><aside class="side">{sidebar(pages, base, cur, lang)}</aside><div id="scrim" hidden></div>
-<main id="main">{main}</main></div>
-<footer>{SITE} · {t['foot']} <a href="{base}{purl(lang, 'novedades.html')}">{t['news']}</a></footer>
+<aside id="side"><div class="side-h"><a href="{home}"><small>{esc(t['lema'])}</small><strong>{logo}{SITE}</strong></a></div>
+<input id="q" class="sinput" type="search" placeholder="{t['search']}" aria-label="{t['searchl']}" autocomplete="off"><ul id="res" hidden></ul>
+{sidebar(pages, base, cur, lang)}</aside><div id="scrim" hidden></div>
+<div id="col"><header class="top"><div class="wrap appbar"><button id="menu" class="iconbtn" aria-controls="side" aria-expanded="false" aria-label="{t['menu']}">{svg('<path d="M4 6h16M4 12h16M4 18h16"/>')}</button>
+<div class="apptitle"><small>{esc(kick or SITE)}</small><strong>{esc(title if cur else t['lema'])}</strong></div>
+<nav class="langs" aria-label="{t['lang']}">{langs}</nav>
+<button id="theme" class="iconbtn" aria-label="{t['theme']}">{svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>')}</button></div>{tabs}</header>
+<main id="main" class="wrap">{main}</main>
+<footer>{SITE} · {t['foot']} <a href="{base}{purl(lang, 'novedades.html')}">{t['news']}</a></footer></div>
 <script src="{base}assets/app.js" defer></script></body></html>"""
 
 T["es"].update(
     tabs=dict(leccion="Lección", esquema="Esquema", test="Test", prueba="Pruébalo"), tabl="Secciones del tema",
     ok="¡Correcto!", ko="Incorrecto.", score="Aciertos", run="Ejecutar", reset="Restaurar", reto="Reto", clave="Idea clave",
-    result="Resultado", retry="Reintentar", cons="Consola", sandbox="Se ejecuta en tu navegador, aislado.", jsl="JavaScript")
+    result="Resultado", retry="Reintentar", cons="Consola", sandbox="Se ejecuta en tu navegador, aislado.", jsl="JavaScript",
+    secl="Secciones", qn="Pregunta {n} de {m}", kick="Guía {n} de {m} · {s}", prev="Anterior", next="Siguiente",
+    st_g="guías", st_s="secciones", st_l="idiomas", start="Empezar", cont="Continuar", readn="{a} de {b} leídas")
 T["en"].update(
     tabs=dict(leccion="Lesson", esquema="Outline", test="Quiz", prueba="Try it"), tabl="Topic sections",
     ok="Correct!", ko="Not quite.", score="Score", run="Run", reset="Reset", reto="Challenge", clave="Key idea",
-    result="Result", retry="Try again", cons="Console", sandbox="Runs in your browser, sandboxed.", jsl="JavaScript")
+    result="Result", retry="Try again", cons="Console", sandbox="Runs in your browser, sandboxed.", jsl="JavaScript",
+    secl="Sections", qn="Question {n} of {m}", kick="Guide {n} of {m} · {s}", prev="Previous", next="Next",
+    st_g="guides", st_s="sections", st_l="languages", start="Start", cont="Continue", readn="{a} of {b} read")
 
 def split_sections(body):
     parts = re.split(r"^=== (\w+)\s*$", body, flags=re.M)
@@ -266,7 +284,7 @@ def split_sections(body):
         out[parts[i]] = parts[i + 1].strip()
     return out
 
-def render_esquema(txt, base):
+def render_esquema(txt, base, title=""):
     blocks, cur = [], None
     for l in txt.splitlines():
         if l.startswith("# "):
@@ -274,10 +292,10 @@ def render_esquema(txt, base):
         elif l.startswith("- ") and cur:
             term, _, desc = l[2:].partition(" — ")
             cur[1].append((term.strip(), desc.strip()))
-    return '<div class="esq">' + "".join(
-        f'<section class="eb"><h3>{inline(t, base)}</h3><ul>' +
+    return (f'<div class="esq-raiz">{esc(title)}</div><div class="esq-grid">' + "".join(
+        f'<section class="esq-bloque c{n % 3 + 1}"><h3 class="esq-h"><span class="esq-n">{n + 1}</span>{inline(t, base)}</h3><ul class="esq-ul">' +
         "".join(f"<li><b>{inline(a, base)}</b><span>{inline(b, base)}</span></li>" for a, b in items) + "</ul></section>"
-        for t, items in blocks) + "</div>"
+        for n, (t, items) in enumerate(blocks)) + "</div>")
 
 def render_test(txt, t, base):
     qs, q, L, i = [], None, txt.splitlines(), 0
@@ -297,35 +315,34 @@ def render_test(txt, t, base):
             q["f"] = l[2:]
         i += 1
     items = []
-    for q in qs:
+    for n, q in enumerate(qs, 1):
         code = f'<pre class="qc"><code>{esc(q["code"])}</code></pre>' if q["code"] else ""
-        opts = "".join(f'<button type="button" class="o"{" data-c=1" if k == q["a"] else ""}>{inline(o, base)}</button>' for k, o in enumerate(q["o"]))
-        items.append(f'<li class="q"><p class="qt">{inline(q["q"], base)}</p>{code}<div class="opts" role="group">{opts}</div>'
+        opts = "".join(f'<button type="button" class="o opt"{" data-c=1" if k == q["a"] else ""}>{inline(o, base)}</button>' for k, o in enumerate(q["o"]))
+        items.append(f'<li class="q card"><p class="qcount">{t["qn"].format(n=n, m=len(qs))}</p><p class="qtext">{inline(q["q"], base)}</p>{code}<div class="opts" role="group">{opts}</div>'
                      f'<p class="fb" hidden>{inline(q["f"], base)}</p></li>')
-    return (f'<div class="quiz" data-score="{t["score"]}" data-ok="{t["ok"]}" data-ko="{t["ko"]}"><ol>{"".join(items)}</ol>'
+    return (f'<div class="quiz" data-score="{t["score"]}" data-ok="{t["ok"]}" data-ko="{t["ko"]}"><div class="bar"><i></i></div>'
+            f'<ol style="list-style:none;margin:0;padding:0">{"".join(items)}</ol>'
             f'<p class="score" aria-live="polite"></p><button type="button" class="retry btn" hidden>{t["retry"]}</button></div>')
 
 ES_PRUEBA = {}
 
 def render_prueba(txt, t, base, rel=""):
     out = []
-    fb = re.split(r"^## ", ES_PRUEBA.get(rel, ""), flags=re.M)[1:]
-    for n, g in enumerate(re.split(r"^## ", txt, flags=re.M)[1:]):
+    for n, g in enumerate(re.split(r"^## ", txt, flags=re.M)[1:], 1):
         title, _, rest = g.partition("\n")
         code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", rest, re.S)}
-        if not code and n < len(fb):   # traducción sin código: se reutiliza el del original
-            code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", fb[n], re.S)}
         desc = re.split(r"^(?:Reto|Clave): ", rest.split("```")[0], flags=re.M)[0].strip()
         reto = re.search(r"^Reto: (.*)$", rest, re.M); clave = re.search(r"^Clave: (.*)$", rest, re.M)
         out.append(
-            f'<section class="try"><h3>{inline(title, base)}</h3><p>{inline(desc, base)}</p>'
-            f'<label>HTML<textarea class="th" spellcheck="false" rows="4">{esc(code.get("html", ""))}</textarea></label>'
-            f'<label>{t["jsl"]}<textarea class="tj" spellcheck="false" rows="12">{esc(code.get("js", ""))}</textarea></label>'
-            f'<div class="tb"><button type="button" class="run btn">{t["run"]}</button><button type="button" class="reset btn">{t["reset"]}</button>'
-            f'<small>{t["sandbox"]}</small></div>'
-            f'<iframe class="out" sandbox="allow-scripts" title="{t["result"]}"></iframe><pre class="con" aria-label="{t["cons"]}" hidden></pre>'
-            + (f'<p class="reto"><b>{t["reto"]}:</b> {inline(reto.group(1), base)}</p>' if reto else "")
-            + (f'<p class="clave"><b>{t["clave"]}:</b> {inline(clave.group(1), base)}</p>' if clave else "") + "</section>")
+            f'<section class="cx try"><h3 class="cx-t"><span class="cx-num">{n}</span>{inline(title, base)}</h3><p class="cx-d">{inline(desc, base)}</p>'
+            f'<div class="cx-two"><div><div class="cx-lab"><span class="cx-dot html"></span>HTML</div><div class="cx-ed"><textarea class="th" spellcheck="false" rows="5" aria-label="HTML">{esc(code.get("html", ""))}</textarea></div></div>'
+            f'<div><div class="cx-lab"><span class="cx-dot js"></span>{t["jsl"]}</div><div class="cx-ed"><textarea class="tj" spellcheck="false" rows="14" aria-label="{t["jsl"]}">{esc(code.get("js", ""))}</textarea></div></div></div>'
+            f'<div class="cx-acts"><button type="button" class="run btn primary">{t["run"]}</button><button type="button" class="reset btn">{t["reset"]}</button>'
+            f'<span class="cx-hint">{t["sandbox"]}</span></div>'
+            f'<div class="cx-lab"><span class="cx-dot res"></span>{t["result"]}</div>'
+            f'<iframe class="out cx-frame" sandbox="allow-scripts" title="{t["result"]}"></iframe><pre class="con" aria-label="{t["cons"]}" hidden></pre>'
+            + (f'<p class="cx-reto"><b>{t["reto"]}:</b> {inline(reto.group(1), base)}</p>' if reto else "")
+            + (f'<p class="cx-clave"><b>{t["clave"]}:</b> {inline(clave.group(1), base)}</p>' if clave else "") + "</section>")
     return "".join(out)
 
 def pagina(p, pages, vers, alts):
@@ -333,29 +350,45 @@ def pagina(p, pages, vers, alts):
     base = "../" * p["url"].count("/")
     lroot = base + purl(lang, "")
     sec = split_sections(p["body"])
-    heads = []
-    lec = md(sec["leccion"], lroot, heads)
-    toc = ""
-    if len(heads) > 2:
-        toc = f"<nav class='toc' aria-label='{t['toc']}'><b>{t['toc']}</b>" + "".join(f'<a href="#{i}">{esc(x.replace(chr(96), ""))}</a>' for i, x in heads) + "</nav>"
-    panels = [("leccion", toc + lec + versiones(p, vers))]
-    if "esquema" in sec: panels.append(("esquema", render_esquema(sec["esquema"], lroot)))
+    idx = [x for x in pages if x["sec"] == p["sec"]]
+    k = idx.index(p)
+    # lección: cabecera con índice numerado y una tarjeta por cada ## del texto
+    chunks, cur_c, fence = [[None, []]], 0, False
+    for ln in sec["leccion"].split("\n"):
+        if ln.startswith("```"): fence = not fence
+        if not fence and ln.startswith("## "):
+            chunks.append([ln[3:].strip(), []])
+        else:
+            chunks[-1][1].append(ln)
+    toc_items, cards = [], []
+    for n, (h2, lines) in enumerate([c for c in chunks if c[0] or "".join(c[1]).strip()], 0):
+        txt = "\n".join(lines).strip()
+        if h2 is None:
+            if txt: cards.append(f'<section class="lec-s">{md(txt, lroot)}</section>')
+            continue
+        sid = slugify(h2); num = len(toc_items) + 1
+        toc_items.append(f'<a class="lec-toc-b" href="#{sid}"><span class="lec-n">{num}</span>{inline(h2, lroot)}</a>')
+        cards.append(f'<section class="lec-s" id="{sid}"><h2 class="lec-h"><span class="lec-n">{num}</span>{inline(h2, lroot)}</h2>{md(txt, lroot)}</section>')
+    toc = f'<div class="lec-toc"><span class="lec-toc-t">{t["toc"]}</span>{"".join(toc_items)}</div>' if len(toc_items) > 1 else ""
+    kicker = t["kick"].format(n=k + 1, m=len(idx), s=p["stitle"])
+    hero = (f'<header class="lec-hero"><div class="lec-kicker">{esc(kicker)}</div><h1 class="lec-title">{esc(p["title"])}</h1>'
+            f'<p class="lec-intro">{esc(p["desc"])}</p>{toc}</header>')
+    lec = hero + "".join(cards) + versiones(p, vers)
+    panels = [("leccion", lec)]
+    if "esquema" in sec: panels.append(("esquema", render_esquema(sec["esquema"], lroot, p["title"])))
     if "test" in sec: panels.append(("test", render_test(sec["test"], t, lroot)))
     if "prueba" in sec: panels.append(("prueba", render_prueba(sec["prueba"], t, lroot, p["rel"])))
     tabs = ""
     if len(panels) > 1:
-        tabs = (f'<div class="tabs" role="tablist" aria-label="{t["tabl"]}">' + "".join(
-            f'<button type="button" role="tab" id="t-{k}" aria-controls="p-{k}" aria-selected="{"true" if n == 0 else "false"}">{t["tabs"][k]}</button>'
-            for n, (k, _) in enumerate(panels)) + "</div>")
-    body = "".join(f'<section id="p-{k}" class="panel" role="tabpanel" aria-labelledby="t-{k}" tabindex="0"><h2 class="ph">{t["tabs"][k]}</h2>{h}</section>'
-                   for k, h in panels)
-    idx = [x for x in pages if x["sec"] == p["sec"]]
-    k = idx.index(p)
-    prev = f'<a href="{base}{idx[k-1]["url"]}">← {esc(idx[k-1]["title"])}</a>' if k else "<span></span>"
-    nxt = f'<a href="{base}{idx[k+1]["url"]}">{esc(idx[k+1]["title"])} →</a>' if k + 1 < len(idx) else "<span></span>"
-    main = (f'<article><p class="crumb"><a href="{base}{purl(lang, "index.html")}">{t["home"]}</a> / {esc(p["stitle"])}</p><h1>{esc(p["title"])}</h1>'
-            f'<p class="lead">{esc(p["desc"])}</p>{tabs}{body}'
-            f'<p class="meta">{t["rev"]}: <time datetime="{p["mod"]}">{p["mod"]}</time> · <a href="{base}{p["url"][:-5]}.md">{t["md"]}</a></p><div class="pn">{prev}{nxt}</div></article>')
+        tabs = (f'<div class="tabs"><div class="tabs-wrap"><div class="tabs-in" role="tablist" aria-label="{t["tabl"]}" style="--n:{len(panels)}">' + "".join(
+            f'<button type="button" class="tab" role="tab" id="t-{kk}" aria-controls="p-{kk}" aria-selected="{"true" if n == 0 else "false"}">{svg(ICONS[kk])}<span>{t["tabs"][kk]}</span></button>'
+            for n, (kk, _) in enumerate(panels)) + "</div></div></div>")
+    body = "".join(f'<section id="p-{kk}" class="panel" role="tabpanel" aria-labelledby="t-{kk}" tabindex="0"><h2 class="ph">{t["tabs"][kk]}</h2>{h}</section>'
+                   for kk, h in panels)
+    prev = (f'<a class="lec-pnb" href="{base}{idx[k-1]["url"]}"><small>← {t["prev"]}</small>{esc(idx[k-1]["title"])}</a>' if k else "<span></span>")
+    nxt = (f'<a class="lec-pnb next" href="{base}{idx[k+1]["url"]}"><small>{t["next"]} →</small>{esc(idx[k+1]["title"])}</a>' if k + 1 < len(idx) else "<span></span>")
+    main = (f'<article class="lec">{body}'
+            f'<p class="meta">{t["rev"]}: <time datetime="{p["mod"]}">{p["mod"]}</time> · <a href="{base}{p["url"][:-5]}.md">{t["md"]}</a></p><div class="lec-pn">{prev}{nxt}</div></article>')
     ld = ""
     if SITE_URL:
         u = canon(lang, p["rel"])
@@ -370,7 +403,7 @@ def pagina(p, pages, vers, alts):
              {"@type": "Organization", "@id": SITE_URL + "/#org", "name": SITE, "url": SITE_URL + "/", "logo": SITE_URL + "/assets/icon.svg"},
              {"@type": "WebSite", "@id": SITE_URL + "/#site", "name": SITE, "url": SITE_URL + "/", "publisher": {"@id": SITE_URL + "/#org"}}]
         ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False) + "</script>"
-    return shell(lang, pages, base, p, p["title"], p["desc"], main, p["rel"], alts, ld, p["url"][:-5] + ".md")
+    return shell(lang, pages, base, p, p["title"], p["desc"], main, p["rel"], alts, ld, p["url"][:-5] + ".md", tabs=tabs, kick=p["stitle"])
 
 def portada(lang, pages, vers, alts):
     t = T[lang]
@@ -379,11 +412,16 @@ def portada(lang, pages, vers, alts):
     for sec, st, d in t["secs"]:
         ps = [p for p in pages if p["sec"] == sec]
         if not ps: continue
-        li = "".join(f'<li><a href="{base}{x["url"]}">{esc(x["title"])}</a></li>' for x in ps[:5])
-        mas = f' <a class="more" href="{base}{ps[0]["url"]}">{t["see_all"].format(n=len(ps))}</a>' if len(ps) > 5 else ""
-        cards.append(f"<section class='card'><h2>{esc(st)}</h2><p>{esc(d)}</p><ul>{li}</ul>{mas}</section>")
-    main = (f"<div class='hero'><h1>{SITE}</h1><p class='lead'>{t['lema']}. {t['hero'].format(d=esc(vers.get('checked', '—')))}</p></div>"
-            f"<div class='grid'>{''.join(cards)}</div>")
+        cards.append(f"<section class='card' data-sec='{sec}'><h2>{esc(st)}</h2><p>{esc(d)}</p>"
+                     f"<div class='bar'><i></i></div><div class='sub'><span class='rd' data-tpl='{esc(t['readn'])}'>{t['readn'].format(a=0, b=len(ps))}</span></div>"
+                     f"<a class='btn primary small go' data-start='{t['start']}' data-cont='{t['cont']}' href='{base}{ps[0]['url']}'>{t['start']}</a></section>")
+    n_g = sum(1 for p in pages)
+    main = (f"<article class='lec'><header class='lec-hero'><div class='lec-kicker'>{SITE}</div><h1 class='lec-title'>{t['lema']}</h1>"
+            f"<p class='lec-intro'>{t['hero'].format(d=esc(vers.get('checked', '—')))}</p></header>"
+            f"<div class='stats'><div class='stat'><b>{n_g}</b><span>{t['st_g']}</span></div>"
+            f"<div class='stat'><b>{len(cards)}</b><span>{t['st_s']}</span></div>"
+            f"<div class='stat'><b>{len(LANGS)}</b><span>{t['st_l']} · ES / EN</span></div></div>"
+            f"<div class='ov'>{''.join(cards)}</div></article>")
     ld = ""
     if SITE_URL:
         g = [{"@type": "WebSite", "@id": SITE_URL + "/#site", "name": SITE, "url": SITE_URL + "/", "inLanguage": list(LANGS), "description": t["lema"],
@@ -399,13 +437,13 @@ def novedades(lang, pages, vers, alts):
     src = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     rows = "".join(f"<tr><td><a href='{esc(v.get('url',''))}' rel='noopener' target='_blank'>{esc(k)}</a></td><td>{esc(v.get('ultimo','—'))}</td></tr>"
                    for k, v in src.get("fuentes", {}).items())
-    main = (f"<article><h1>{t['newt']}</h1><p class='lead'>{t['newl'].format(d=esc(vers.get('checked','—')))}</p>"
+    main = (f"<article class='lec'><header class='lec-hero'><div class='lec-kicker'>{SITE}</div><h1 class='lec-title'>{t['newt']}</h1><p class='lec-intro'>{t['newl'].format(d=esc(vers.get('checked','—')))}</p></header>"
             f"<div class='tbl'><table><thead><tr><th>{t['src']}</th><th>{t['last']}</th></tr></thead><tbody>{rows}</tbody></table></div></article>")
     return shell(lang, pages, base, None, t["newt"], t["newt"], main, "novedades.html", alts)
 
 def no_encontrada(pages):
     t = T[DEFAULT]
-    main = f"<article><h1>{t['nf']}</h1><p class='lead'>{t['nfp']}</p><p><a href='{PREFIX}index.html'>{t['home']}</a></p></article>"
+    main = f"<article class='lec'><header class='lec-hero'><h1 class='lec-title'>{t['nf']}</h1><p class='lec-intro'>{t['nfp']}</p><a class='btn primary' href='{PREFIX}index.html'>{t['home']}</a></header></article>"
     return shell(DEFAULT, pages, PREFIX, None, t["nf"], t["nfp"], main, "404.html", {}).replace(
         '<meta name="robots" content="index,follow', '<meta name="robots" content="noindex,follow')
 

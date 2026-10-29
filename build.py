@@ -235,7 +235,7 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="")
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
 <meta property="og:site_name" content="{SITE}"><meta property="og:title" content="{html.escape(full)}"><meta property="og:description" content="{d}"><meta property="og:type" content="{'article' if cur else 'website'}">
 <meta name="twitter:card" content="summary_large_image">{''.join(head)}
-<meta name="theme-color" content="#0b1b2b"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{base}assets/style.css">{ld}
 <script>document.documentElement.className='js';try{{var t=localStorage.getItem('faro-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 </head><body data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}">

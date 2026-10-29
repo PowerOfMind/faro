@@ -61,7 +61,7 @@ Add `CUSTOM_ELEMENTS_SCHEMA` and bind properties with `[prop]` and events with `
 === test
 ? Mount the component in a test (open-wc):
 ```js
-const el = await ___(html`<mi-boton></mi-boton>`);
+const el = await ___(html`<my-button></my-button>`);
 ```
 * fixture
 - render
@@ -81,7 +81,7 @@ expect(el.shadowRoot.textContent).to.equal('1');
 ! updateComplete is the promise that resolves when the update finishes.
 ? Use the web component inside React:
 ```js
-const MiBoton = ___({ react: React, tagName: 'mi-boton', elementClass: MiBotonEl });
+const MyButton = ___({ react: React, tagName: 'my-button', elementClass: MyButtonEl });
 ```
 * createComponent
 - wrap
@@ -109,7 +109,7 @@ ___ count = 0;
 ! Standard decorators need the accessor word on the field.
 ? Declare internal state with the decorator:
 ```js
-@___() accessor _abierto = false;
+@___() accessor _open = false;
 ```
 * state
 - internal
@@ -119,5 +119,46 @@ ___ count = 0;
 === prueba
 ## The interview exercise: a complete component
 It brings together the important things: a reactive property with reflect, a derived value in willUpdate, a named slot with fallback, a composed event, a custom property and :host. Try to write it from memory.
+```html
+<style>counter-card { --counter-border: var(--primary) }</style>
+<counter-card max="3"><span slot="title">My counter</span></counter-card>
+```
+```js
+import {LitElement, html, css} from 'lit';
+
+class CounterCard extends LitElement {
+  static properties = {
+    count: {type: Number, reflect: true},
+    max: {type: Number},
+    message: {state: true},
+  };
+  static styles = css`
+    :host { display: block; padding: 12px; border: 2px solid var(--counter-border, var(--line)); border-radius: 12px }
+    ::slotted([slot=title]) { font-weight: 800 }
+    button { padding: 6px 14px }`;
+
+  constructor() { super(); this.count = 0; this.max = 5; this.message = ''; }
+
+  willUpdate(changes) {                                   // derived values here
+    if (changes.has('count') || changes.has('max')) {
+      this.message = this.count >= this.max ? 'Maximum!' : `${this.max - this.count} to go`;
+    }
+  }
+  updated(changes) {                                      // effect after rendering
+    if (changes.has('count') && changes.get('count') !== undefined) {
+      this.dispatchEvent(new CustomEvent('count-changed', {detail: {count: this.count}, bubbles: true, composed: true}));
+    }
+  }
+  render() {
+    return html`
+      <slot name="title">Counter</slot>
+      <p>${this.count} — ${this.message}</p>
+      <button ?disabled=${this.count >= this.max} @click=${() => this.count++}>+1</button>`;
+  }
+}
+customElements.define('counter-card', CounterCard);
+
+document.addEventListener('count-changed', (e) => console.log('event received: count =', e.detail.count));
+```
 Reto: delete the code in the editor and rewrite it from memory; run it and compare.
 Clave: If you explain it while you write it (reactivity, lifecycle, shadow DOM, events), you cover 80 % of the interview.

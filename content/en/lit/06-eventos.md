@@ -49,7 +49,7 @@ From outside, `e.target` is the host. The real origin: `e.composedPath()[0]`.
 === test
 ? Make the event go up the tree and cross the shadow DOM up to the document:
 ```js
-this.dispatchEvent(new CustomEvent('cambio', { detail: 1, ___ }));
+this.dispatchEvent(new CustomEvent('change', { detail: 1, ___ }));
 ```
 * bubbles: true, composed: true
 - bubbles: true
@@ -100,9 +100,66 @@ createRenderRoot() {
 === prueba
 ## bubbles and composed, seen live
 A button inside a shadow DOM dispatches an event. Tick/untick the boxes and press: who hears it? Also notice `target` (retargeting) versus the real origin.
+```html
+<label><input type="checkbox" id="bub" checked> bubbles</label>
+<label><input type="checkbox" id="comp"> composed</label>
+<div id="outer" style="padding:10px;border:2px dashed var(--line);margin-top:8px">
+  <b>outer div (light DOM)</b><br>
+  <emitter-el></emitter-el>
+</div>
+```
+```js
+import {LitElement, html} from 'lit';
+const $ = (id) => document.getElementById(id);
+
+class EmitterEl extends LitElement {
+  render() { return html`<button @click=${this.emit}>Dispatch event from the inner button</button>`; }
+  emit(e) {
+    const ev = new CustomEvent('ping', {bubbles: $('bub').checked, composed: $('comp').checked});
+    console.log('— dispatched: bubbles=' + ev.bubbles + ', composed=' + ev.composed);
+    e.target.dispatchEvent(ev);              // dispatched from INSIDE the shadow DOM
+  }
+}
+customElements.define('emitter-el', EmitterEl);
+
+const who = (e) => `seen target = <${e.target.localName}>, real origin = <${e.composedPath()[0].localName}>`;
+document.querySelector('emitter-el').addEventListener('ping', (e) => console.log('   host hears:', who(e)));
+$('outer').addEventListener('ping', (e) => console.log('   outer div hears:', who(e)));
+document.addEventListener('ping', (e) => console.log('   document hears:', who(e)));
+```
 Reto: try the four combinations: bubbles only → nobody outside hears it; composed only → only the host; both → it reaches document.
 Clave: bubbles = goes up the tree; composed = crosses the shadow DOM. Outside, e.target is the host (retargeting); composedPath()[0] gives the origin.
+
 ## Slots: default, named, fallback and slotchange
 Add and remove projected content and watch the fallback appear and `slotchange` fire.
+```html
+<my-panel id="p"><p>Panel body</p></my-panel>
+<p><button id="ab">Add header</button> <button id="qu">Remove header</button> <button id="ac">Add paragraph</button></p>
+```
+```js
+import {LitElement, html, css} from 'lit';
+
+class MyPanel extends LitElement {
+  static styles = css`.head { font-weight: 700; border-bottom: 1px solid var(--line); margin-bottom: 6px } i { color: var(--muted) }`;
+  render() {
+    return html`
+      <div class="head"><slot name="header" @slotchange=${this.changed}><i>(default header: fallback content)</i></slot></div>
+      <slot @slotchange=${this.changed}></slot>`;
+  }
+  changed(e) {
+    const s = e.target;
+    console.log(`slotchange on «${s.name || 'default'}» → ${s.assignedNodes({flatten: true}).length} assigned nodes`);
+  }
+}
+customElements.define('my-panel', MyPanel);
+
+const p = document.getElementById('p');
+document.getElementById('ab').onclick = () => {
+  if (p.querySelector('[slot=header]')) return;
+  const s = document.createElement('span'); s.slot = 'header'; s.textContent = 'Projected header'; p.append(s);
+};
+document.getElementById('qu').onclick = () => p.querySelector('[slot=header]')?.remove();
+document.getElementById('ac').onclick = () => { const x = document.createElement('p'); x.textContent = 'Another paragraph'; p.append(x); };
+```
 Reto: notice that projected children do NOT move into the shadow DOM: they are still `p.children` in the light DOM.
 Clave: Content inside <slot> is the fallback; slotchange signals changes; @queryAssignedElements gets the assigned nodes.

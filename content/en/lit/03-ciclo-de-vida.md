@@ -53,7 +53,7 @@ updated(changed: PropertyValues) {
 ```js
 connectedCallback() {
   ___;
-  this.iniciarListeners();
+  this.startListeners();
 }
 ```
 * super.connectedCallback()
@@ -63,7 +63,7 @@ connectedCallback() {
 ! You must always call super.connectedCallback() so Lit creates the renderRoot and starts the update cycle.
 ? Cancel the update if the required identifier is missing:
 ```js
-___(cambios) {
+___(changes) {
   return Boolean(this.id);
 }
 ```
@@ -71,12 +71,12 @@ ___(cambios) {
 - willUpdate
 - beforeUpdate
 - canRender
-! shouldUpdate(cambios) controls whether the render continues; if it returns false, the cycle stops.
+! shouldUpdate(changes) controls whether the render continues; if it returns false, the cycle stops.
 ? Compute derived values just before render without causing an extra cycle:
 ```js
-___(cambios) {
-  if (cambios.has('precio') || cambios.has('iva')) {
-    this.total = this.precio * (1 + this.iva);
+___(changes) {
+  if (changes.has('price') || changes.has('vat')) {
+    this.total = this.price * (1 + this.vat);
   }
 }
 ```
@@ -84,7 +84,7 @@ ___(cambios) {
 - updated
 - firstUpdated
 - render
-! willUpdate(cambios) runs before render(); modifying properties here schedules no second cycle.
+! willUpdate(changes) runs before render(); modifying properties here schedules no second cycle.
 ? Access the created DOM right after the first render:
 ```js
 ___() {
@@ -98,22 +98,76 @@ ___() {
 ! firstUpdated() runs only once, after the element has rendered its DOM for the first time.
 ? Look up the value the property had before the current update:
 ```js
-updated(cambios) {
-  const anterior = cambios.___
-  console.log(`De ${anterior} a ${this.cuenta}`);
+updated(changes) {
+  const previous = changes.___
+  console.log(`From ${previous} to ${this.count}`);
 }
 ```
-* get('cuenta')
-- has('cuenta')
-- cuenta
-- old('cuenta')
-! cambios is a Map where cambios.get('prop') returns the value the property had before updating.
+* get('count')
+- has('count')
+- count
+- old('count')
+! changes is a Map where changes.get('prop') returns the value the property had before updating.
 === prueba
 ## The lifecycle, in the console
 Press the component's button to change `n`, and remove / re-add the element in the DOM. Read the order of the logs.
+```html
+<div id="host"><my-cycle></my-cycle></div>
+<p><button id="q">Remove from DOM</button> <button id="p">Put it back</button></p>
+```
+```js
+import {LitElement, html} from 'lit';
+
+class MyCycle extends LitElement {
+  static properties = { n: {type: Number} };
+  constructor() { super(); console.log('constructor'); this.n = 0; }
+  connectedCallback() { super.connectedCallback(); console.log('connectedCallback'); }
+  disconnectedCallback() { super.disconnectedCallback(); console.log('disconnectedCallback'); }
+  shouldUpdate(c) { console.log('shouldUpdate  changed:', [...c.keys()].join(', ')); return true; }
+  willUpdate()    { console.log('willUpdate'); }
+  render()        { console.log('render  (n = ' + this.n + ')'); return html`<button @click=${() => this.n++}>n = ${this.n}</button>`; }
+  firstUpdated()  { console.log('firstUpdated  (first time only)'); }
+  updated(c)      { console.log('updated  changed:', [...c.keys()].join(', ')); }
+}
+customElements.define('my-cycle', MyCycle);
+
+const el = document.querySelector('my-cycle');
+document.getElementById('q').onclick = () => el.remove();
+document.getElementById('p').onclick = () => document.getElementById('host').append(el);
+```
 Reto: return `false` in shouldUpdate when `this.n > 3` and notice there is no render or updated any more.
 Clave: Order: constructor → connectedCallback → shouldUpdate → willUpdate → render → firstUpdated → updated.
+
 ## Derived values: willUpdate vs updated
-`completo` is computed in willUpdate: typing in each input produces a single updated. Watch the console.
-Reto: move the computation of `completo` into `updated()` (with an `if` on `cambios`): you will see two `updated` per keystroke, because changing a property there schedules another cycle.
+`full` is computed in willUpdate: typing in each input produces a single updated. Watch the console.
+```html
+<my-name></my-name>
+```
+```js
+import {LitElement, html} from 'lit';
+
+class MyName extends LitElement {
+  static properties = {
+    first: {}, last: {},
+    full: {state: true},
+  };
+  constructor() { super(); this.first = 'Ada'; this.last = 'Lovelace'; this.cycles = 0; }
+
+  willUpdate(changes) {                       // deriving here does NOT cause another cycle
+    if (changes.has('first') || changes.has('last')) {
+      this.full = `${this.first} ${this.last}`;
+    }
+  }
+  updated() { this.cycles++; console.log('updated #', this.cycles); }
+
+  render() {
+    return html`
+      <input .value=${this.first} @input=${(e) => (this.first = e.target.value)}>
+      <input .value=${this.last}  @input=${(e) => (this.last = e.target.value)}>
+      <p>Full name: <b>${this.full}</b></p>`;
+  }
+}
+customElements.define('my-name', MyName);
+```
+Reto: move the computation of `full` into `updated()` (with an `if` on `changes`): you will see two `updated` per keystroke, because changing a property there schedules another cycle.
 Clave: Derived values in willUpdate (no extra cycle). Changing properties in updated schedules another cycle: guard it with changed.has().

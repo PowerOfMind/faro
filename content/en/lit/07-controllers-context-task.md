@@ -110,7 +110,7 @@ this._m = (e) => {
 ! The controller does not render: it asks the host for an update.
 ? Create a context key:
 ```js
-const ctx = ___('tema');
+const ctx = ___('theme');
 ```
 * createContext
 - newContext
@@ -120,7 +120,7 @@ const ctx = ___('tema');
 ? Consume the context and receive every change:
 ```js
 @___({ context: ctx, subscribe: true })
-tema;
+theme;
 ```
 * consume
 - provide
@@ -129,7 +129,7 @@ tema;
 ! consume with subscribe: true updates the value when it changes.
 ? Provide the context without decorators:
 ```js
-_p = new ___(this, { context: ctx, initialValue: 'claro' });
+_p = new ___(this, { context: ctx, initialValue: 'light' });
 ```
 * ContextProvider
 - ContextRoot
@@ -139,13 +139,123 @@ _p = new ___(this, { context: ctx, initialValue: 'claro' });
 === prueba
 ## A ReactiveController: the clock
 The controller starts the interval when connected and clears it when disconnected. Remove and re-add the element and watch the logs.
+```html
+<div id="host"><my-clock></my-clock></div>
+<p><button id="q">Remove</button> <button id="p">Put back</button></p>
+```
+```js
+import {LitElement, html} from 'lit';
+
+class ClockController {
+  constructor(host, interval = 1000) {
+    this.host = host;
+    this.interval = interval;
+    this.value = new Date().toLocaleTimeString();
+    host.addController(this);                    // registers itself on the host
+  }
+  hostConnected() {
+    console.log('hostConnected → starts setInterval');
+    this.timer = setInterval(() => {
+      this.value = new Date().toLocaleTimeString();
+      this.host.requestUpdate();                 // asks for a render
+    }, this.interval);
+  }
+  hostDisconnected() {
+    console.log('hostDisconnected → clearInterval');
+    clearInterval(this.timer);
+  }
+}
+
+class MyClock extends LitElement {
+  clock = new ClockController(this, 1000);
+  render() { return html`<p>Time: <b>${this.clock.value}</b></p>`; }
+}
+customElements.define('my-clock', MyClock);
+
+const el = document.querySelector('my-clock');
+document.getElementById('q').onclick = () => el.remove();
+document.getElementById('p').onclick = () => document.getElementById('host').append(el);
+```
 Reto: add a `hostUpdated() { console.log('hostUpdated'); }` to the controller.
 Clave: Controller = reusable logic tied to the host's lifecycle. Registration: host.addController(this); refresh: host.requestUpdate().
+
 ## Reusing a controller in several components
 The same ResizeController gives the width to two different components. Move the slider to resize the second one.
+```html
+<width-a></width-a>
+<width-b style="width:60%"></width-b>
+<input type="range" min="30" max="100" value="60" oninput="document.querySelector('width-b').style.width = this.value + '%'">
+```
+```js
+import {LitElement, html, css} from 'lit';
+
+class ResizeController {
+  w = 0;
+  constructor(host) { this.host = host; host.addController(this); }
+  hostConnected() {
+    this.obs = new ResizeObserver(([e]) => { this.w = Math.round(e.contentRect.width); this.host.requestUpdate(); });
+    this.obs.observe(this.host);
+  }
+  hostDisconnected() { this.obs.disconnect(); }
+}
+
+const box = css`:host { display: block; padding: 8px; margin: 6px 0; border: 1px dashed var(--primary); border-radius: 8px }`;
+
+class WidthA extends LitElement {
+  static styles = box;
+  size = new ResizeController(this);
+  render() { return html`A measures ${this.size.w}px`; }
+}
+class WidthB extends LitElement {
+  static styles = box;
+  size = new ResizeController(this);
+  render() { return html`B measures <b>${this.size.w}px</b> (same controller, another instance)`; }
+}
+customElements.define('width-a', WidthA);
+customElements.define('width-b', WidthB);
+```
 Reto: a mixin would have added methods to the prototype; the controller does not touch the class and you can have several per host.
 Clave: Controller versus mixin: own identity and state, no name collisions, several per host and composable.
+
 ## Context: data without prop drilling
 The root provides the theme; the middle layer knows nothing about it; the leaf consumes it with `subscribe: true`.
+```html
+<app-root></app-root>
+```
+```js
+import {LitElement, html} from 'lit';
+import {createContext, ContextProvider, ContextConsumer} from '@lit/context';
+
+const themeCtx = createContext('theme');
+
+class AppRoot extends LitElement {
+  provider = new ContextProvider(this, {context: themeCtx, initialValue: 'light'});
+  render() {
+    return html`
+      <button @click=${() => this.provider.setValue(this.provider.value === 'light' ? 'dark' : 'light')}>
+        Change theme (at the root)
+      </button>
+      <middle-layer></middle-layer>`;
+  }
+}
+class MiddleLayer extends LitElement {
+  render() {
+    return html`<div style="padding:8px;border:1px dashed var(--line);margin-top:8px">
+      Middle layer (neither receives nor passes the theme via props)
+      <div><leaf-button></leaf-button></div></div>`;
+  }
+}
+class LeafButton extends LitElement {
+  consumer = new ContextConsumer(this, {context: themeCtx, subscribe: true});
+  render() {
+    const t = this.consumer.value;
+    return html`<span style="display:inline-block;margin-top:6px;padding:6px 12px;border-radius:8px;
+      background:${t === 'dark' ? '#111' : '#fde68a'};color:${t === 'dark' ? '#fff' : '#111'}">I am the leaf → theme ${t}</span>`;
+  }
+}
+customElements.define('app-root', AppRoot);
+customElements.define('middle-layer', MiddleLayer);
+customElements.define('leaf-button', LeafButton);
+```
 Reto: remove `subscribe: true`: the leaf keeps the initial value and never updates again.
 Clave: Context uses the DOM event "context-request": the consumer fires it and an ancestor provider answers. Good for user, locale, services, themes.

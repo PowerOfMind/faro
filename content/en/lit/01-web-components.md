@@ -74,17 +74,17 @@ React calls the component again and compares a VDOM. Lit touches only the bindin
 === test
 ? Complete the native call to register the element with a valid name:
 ```js
-customElements.define('___', MiEtiqueta);
+customElements.define('___', MyTag);
 ```
-* mi-etiqueta
-- mietiqueta
-- MiEtiqueta
-- mi_etiqueta
+* my-tag
+- mytag
+- MyTag
+- mi_label
 ! Custom element names must contain a hyphen so they never collide with native tags.
-? Declare the static getter to observe changes in the 'texto' attribute:
+? Declare the static getter to observe changes in the 'text' attribute:
 ```js
-class MiEtiqueta extends HTMLElement {
-  static get ___() { return ['texto']; }
+class MyTag extends HTMLElement {
+  static get ___() { return ['text']; }
 }
 ```
 * observedAttributes
@@ -106,8 +106,8 @@ constructor() {
 ! mode: 'open' lets outside JavaScript read and manipulate element.shadowRoot.
 ? Extend Lit's base class to create a component with Shadow DOM:
 ```js
-class MiSaludo extends ___ {
-  render() { return html`<p>Hola</p>`; }
+class MyGreeting extends ___ {
+  render() { return html`<p>Hello</p>`; }
 }
 ```
 * LitElement
@@ -117,9 +117,9 @@ class MiSaludo extends ___ {
 ! LitElement combines ReactiveElement and lit-html, giving reactivity and efficient rendering.
 ? Declare the reactive property in standard JavaScript without decorators:
 ```js
-class MiSaludo extends LitElement {
+class MyGreeting extends LitElement {
   static ___ = {
-    nombre: { type: String }
+    name: { type: String }
   };
 }
 ```
@@ -131,7 +131,7 @@ class MiSaludo extends LitElement {
 ? Produce the TemplateResult in render with Lit's tagged template:
 ```js
 render() {
-  return ___`<p>Hola, <b>${this.nombre}</b></p>`;
+  return ___`<p>Hello, <b>${this.name}</b></p>`;
 }
 ```
 * html
@@ -142,13 +142,83 @@ render() {
 === prueba
 ## A native custom element (without Lit)
 Notice the order of the logs: the element was already in the HTML and gets "upgraded" when the class is registered.
+```html
+<my-greeting name="John"></my-greeting>
+<p><button onclick="document.querySelector('my-greeting').setAttribute('name','Ann')">Change attribute</button>
+<button onclick="document.querySelector('my-greeting').remove()">Remove from DOM</button></p>
+```
+```js
+class MyGreeting extends HTMLElement {
+  static observedAttributes = ['name'];
+  constructor() {
+    super();
+    console.log('constructor');
+    this.attachShadow({mode: 'open'});
+  }
+  connectedCallback() { console.log('connectedCallback'); this.paint(); }
+  disconnectedCallback() { console.log('disconnectedCallback'); }
+  attributeChangedCallback(name, before, after) {
+    console.log(`attributeChangedCallback: ${name}  ${before} -> ${after}`);
+    if (this.isConnected) this.paint();
+  }
+  paint() {
+    this.shadowRoot.innerHTML =
+      `<style>p{color:var(--primary);font-weight:700}</style><p>Hello, ${this.getAttribute('name')}</p>`;
+  }
+}
+customElements.define('my-greeting', MyGreeting);
+```
 Reto: remove `static observedAttributes` and check that attributeChangedCallback is no longer called.
 Clave: The name has a hyphen; attributeChangedCallback only fires for observedAttributes; an element already present is upgraded when it is registered.
+
 ## Shadow DOM and slots: encapsulation
 Global CSS paints the outside paragraph red; the one inside the shadow DOM is not affected.
-Reto: delete the span with slot="titulo" from the HTML and watch the fallback content "Sin título" appear.
+```html
+<style>p{color:crimson}</style>
+<p>Outside paragraph: global CSS affects it.</p>
+<my-box><span slot="title">Projected title</span>Default content</my-box>
+```
+```js
+class MyBox extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'}).innerHTML = `
+      <style>
+        p { color: seagreen }                      /* only inside the shadow */
+        h4 { margin: 0; border-bottom: 1px solid #888 }
+      </style>
+      <h4><slot name="title">No title</slot></h4>
+      <p><slot></slot></p>`;
+  }
+}
+customElements.define('my-box', MyBox);
+```
+Reto: delete the span with slot="title" from the HTML and watch the fallback content "No title" appear.
 Clave: Shadow DOM encapsulates DOM and styles; <slot>s project the children without moving them.
+
 ## Your first Lit component
 Reactive property + template + event. No build: standard JavaScript.
-Reto: add `?disabled=${this.cuenta >= 5}` to the button to block it at 5.
+```html
+<my-counter></my-counter>
+```
+```js
+import {LitElement, html, css} from 'lit';
+
+class MyCounter extends LitElement {
+  static properties = { count: {type: Number} };
+  static styles = css`button { padding: 8px 14px; font-size: 15px; }`;
+
+  constructor() {
+    super();
+    this.count = 0;
+  }
+  render() {
+    return html`<button @click=${() => this.count++}>
+      Clicked ${this.count} times
+    </button>`;
+  }
+}
+customElements.define('my-counter', MyCounter);
+```
+Reto: add `?disabled=${this.count >= 5}` to the button to block it at 5.
 Clave: Change a reactive property → Lit schedules an async render → only the affected ${} hole is updated.

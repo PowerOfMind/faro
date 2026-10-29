@@ -74,16 +74,16 @@ html`<div class=${classMap({active: this.on, big: this.size > 1})}></div>`
 === test
 ? Bind the input value as a JavaScript property rather than as an HTML attribute:
 ```js
-html`<input type="text" ___=${this.texto}>`;
+html`<input type="text" ___=${this.text}>`;
 ```
 * .value
 - value
 - ?value
 - @value
-! The . prefix indicates a binding to a DOM object property (.value=${this.texto}).
+! The . prefix indicates a binding to a DOM object property (.value=${this.text}).
 ? Add or remove the boolean attribute disabled depending on state:
 ```js
-html`<button ___=${this.cargando}>Enviar</button>`;
+html`<button ___=${this.loading}>Send</button>`;
 ```
 * ?disabled
 - .disabled
@@ -92,7 +92,7 @@ html`<button ___=${this.cargando}>Enviar</button>`;
 ! The ? prefix adds the attribute if truthy and removes it entirely if falsy.
 ? Register a native event listener with lit-html syntax:
 ```js
-html`<button ___=${this._onClick}>Guardar</button>`;
+html`<button ___=${this._onClick}>Save</button>`;
 ```
 * @click
 - onclick
@@ -110,7 +110,7 @@ ${___(this.items, (i) => i.id, (i) => html`<li>${i.n}</li>`)}
 ! repeat receives the key and moves DOM nodes instead of recreating them.
 ? Stop Lit from overwriting what the user types in the input:
 ```js
-html`<input .value=${___(this.texto)}>`
+html`<input .value=${___(this.text)}>`
 ```
 * live
 - cache
@@ -119,7 +119,7 @@ html`<input .value=${___(this.texto)}>`
 ! live compares with the real DOM value, not the last value Lit rendered.
 ? Set the attribute only if there is a value:
 ```js
-html`<a href=${___(this.url)}>Ir</a>`
+html`<a href=${___(this.url)}>Go</a>`
 ```
 * ifDefined
 - live
@@ -129,13 +129,92 @@ html`<a href=${___(this.url)}>Ir</a>`
 === prueba
 ## The four bindings: attribute, ?boolean, .property, @event
 One of each, plus a child that receives an array with `.items` (not serialised to a string).
-Reto: change `.items=${this.colores}` to `items=${this.colores}` (no dot): the array arrives as the string "rojo,verde,azul".
+```html
+<demo-bindings></demo-bindings>
+```
+```js
+import {LitElement, html, css} from 'lit';
+
+class ChildList extends LitElement {
+  static properties = { items: {type: Array} };
+  render() { return html`<p>The child received an array with <code>.items</code>: ${this.items.join(', ')}</p>`; }
+}
+customElements.define('child-list', ChildList);
+
+class DemoBindings extends LitElement {
+  static properties = { name: {}, active: {type: Boolean} };
+  static styles = css`.on { color: var(--ok); font-weight: 700 } .off { color: var(--muted) }`;
+  constructor() { super(); this.name = 'world'; this.active = false; this.colors = ['red', 'green', 'blue']; }
+
+  render() {
+    return html`
+      <p>Attribute (string): <span class=${this.active ? 'on' : 'off'} title="Hello ${this.name}">hello ${this.name}</span></p>
+      <p>Boolean <code>?</code>: <button ?disabled=${!this.active}>only if active</button></p>
+      <p>Property <code>.</code>: <input .value=${this.name} @input=${(e) => (this.name = e.target.value)}></p>
+      <p>Event <code>@</code>: <button @click=${() => (this.active = !this.active)}>active = ${String(this.active)}</button></p>
+      <child-list .items=${this.colors}></child-list>`;
+  }
+}
+customElements.define('demo-bindings', DemoBindings);
+```
+Reto: change `.items=${this.colors}` to `items=${this.colors}` (no dot): the array arrives as the string "red,green,blue".
 Clave: attr = string · ?attr = boolean · .prop = JS value · @evt = listener (this is already bound to the component).
+
 ## Conditionals, lists and `nothing`
 A ternary with nested templates, `.map()` and `nothing` to remove an attribute entirely.
-Reto: change `this.ayuda || nothing` to `this.ayuda`: with empty text the attribute exists but empty; with `nothing` it disappears.
+```html
+<demo-cond></demo-cond>
+```
+```js
+import {LitElement, html, nothing} from 'lit';
+
+class DemoCond extends LitElement {
+  static properties = { loggedIn: {type: Boolean}, items: {type: Array}, help: {} };
+  constructor() { super(); this.loggedIn = false; this.items = ['a', 'b', 'c']; this.help = ''; }
+
+  render() {
+    return html`
+      ${this.loggedIn ? html`<p>Welcome 👋</p>` : html`<p>Please sign in</p>`}
+      <button @click=${() => (this.loggedIn = !this.loggedIn)}>toggle session</button>
+
+      <ul>${this.items.map((x, i) => html`<li>${i}: ${x}</li>`)}</ul>
+      <button @click=${() => (this.items = [...this.items, String.fromCharCode(97 + this.items.length)])}>add</button>
+
+      <p><input placeholder="aria-label text" @input=${(e) => (this.help = e.target.value)}>
+         <button aria-label=${this.help || nothing}>button</button></p>
+      <p>aria-label in the DOM: <code>${this.help ? this.help : '(none: nothing removed the attribute)'}</code></p>`;
+  }
+}
+customElements.define('demo-cond', DemoCond);
+```
+Reto: change `this.help || nothing` to `this.help`: with empty text the attribute exists but empty; with `nothing` it disappears.
 Clave: `nothing` renders nothing or removes the whole attribute; null/undefined/'' in a child do not paint anything either.
+
 ## map vs repeat: DOM identity
 Type something different in each input and press "Reverse". With `map` the text stays in its position (the DOM is reused in place); with `repeat` and a key the input travels with its element.
+```html
+<demo-list></demo-list>
+```
+```js
+import {LitElement, html} from 'lit';
+import {repeat} from 'lit/directives/repeat.js';
+
+class DemoList extends LitElement {
+  static properties = { items: {type: Array}, mode: {} };
+  constructor() { super(); this.items = ['A', 'B', 'C']; this.mode = 'map'; }
+
+  render() {
+    const row = (x) => html`<li>${x}: <input placeholder="type here"></li>`;
+    return html`
+      <p>Mode:
+        <select .value=${this.mode} @change=${(e) => (this.mode = e.target.value)}>
+          <option>map</option><option>repeat</option>
+        </select>
+        <button @click=${() => (this.items = [...this.items].reverse())}>Reverse list</button></p>
+      <ul>${this.mode === 'map' ? this.items.map(row) : repeat(this.items, (x) => x, row)}</ul>`;
+  }
+}
+customElements.define('demo-list', DemoList);
+```
 Reto: try `map`: after reversing, the text you typed in "A" stays in the top row, which is now "C".
 Clave: map = fast, no diff or movement. repeat with a key = keeps and moves the DOM (focus, inputs, animations) when reordering.

@@ -1,6 +1,6 @@
 ---
 title: SDKs y herramientas para apps con IA
-desc: Librerías para llamar a modelos, hacer streaming, RAG y evaluar.
+desc: Herramientas de IA para crear aplicaciones con modelos, con opciones de SDK, streaming, agentes, búsqueda semántica y evaluación.
 pkgs: "@anthropic-ai/sdk", openai, ai, "@modelcontextprotocol/sdk", langchain
 ---
 | Necesidad | Opción |

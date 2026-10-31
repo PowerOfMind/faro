@@ -1,6 +1,6 @@
 ---
 title: Ahorrar tokens y contexto
-desc: Cómo gastar menos sin perder calidad al trabajar con agentes de código.
+desc: Tokens y contexto en agentes de código, con hábitos para reducir costes sin perder calidad y ejemplos de mapas de proyecto e instrucciones.
 ---
 Los tokens se gastan en lo que **lee** el modelo (contexto) más que en lo que escribe. Cada mensaje reenvía el historial.
 

@@ -11,6 +11,10 @@ ROOT = Path(__file__).parent
 OUT = ROOT / "dist"
 SITE = "LightHub Dev"
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
+SITE_HOST = urlparse(SITE_URL).hostname or ""
+ANALYTICS = ('<script defer src="/_vercel/insights/script.js"></script>'
+             '<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)}</script>'
+             if SITE_HOST == "vercel.app" or SITE_HOST.endswith(".vercel.app") else "")
 PREFIX = os.environ.get("SITE_PREFIX", urlparse(SITE_URL).path.rstrip("/") + "/" if SITE_URL else "/")  # para el 404
 DEFAULT = "es"
 LANGS = {"es": ("Español", "es_ES"), "en": ("English", "en_US")}
@@ -253,7 +257,7 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="",
 <meta property="og:site_name" content="{SITE}"><meta property="og:title" content="{html.escape(full)}"><meta property="og:description" content="{d}"><meta property="og:type" content="{'article' if cur else 'website'}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{html.escape(full)}"><meta name="twitter:description" content="{d}">{''.join(head)}
 <meta name="theme-color" content="#0d1117"><link rel="icon" href="{base}assets/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{base}assets/style.css">{ld}
+<link rel="stylesheet" href="{base}assets/style.css">{ld}{ANALYTICS}
 <script>document.documentElement.className='js';try{{var t=localStorage.getItem('lighthub-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 </head><body{' class="has-tabs"' if tabs else ''} data-base="{base}" data-search="{base}{purl(lang, 'search.json')}" data-copy="{esc(t['copy'])}" data-copied="{esc(t['copied'])}"{cur_k}>
 <a class="skip" href="#main">{t['skip']}</a>
@@ -471,7 +475,7 @@ def redirecciones():
                 puente = (f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8">'
                           f'<meta name="robots" content="noindex">'
                           f'<meta http-equiv="refresh" content="0; url={destino}">'
-                          f'<link rel="canonical" href="{destino}"><title>Redirect</title></head>'
+                          f'<link rel="canonical" href="{destino}"><title>Redirect</title>{ANALYTICS}</head>'
                           f'<body><a href="{destino}">{destino}</a></body></html>')
                 (carpeta / f"{anterior}.{ext}").write_text(puente, encoding="utf-8")
 
@@ -480,7 +484,10 @@ def main():
     if OUT.exists(): shutil.rmtree(OUT)
     OUT.mkdir()
     shutil.copytree(ROOT / "assets", OUT / "assets")
-    shutil.copy2(ROOT / "vercel.json", OUT / "vercel.json")
+    vercel_config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+    for key in ("buildCommand", "outputDirectory", "installCommand"):
+        vercel_config.pop(key, None)
+    (OUT / "vercel.json").write_text(json.dumps(vercel_config, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     vp = ROOT / "data" / "versions.json"
     vers = json.loads(vp.read_text(encoding="utf-8")) if vp.exists() else {}
     allp = {l: cargar(l) for l in LANGS}

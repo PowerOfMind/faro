@@ -1,6 +1,6 @@
 ---
 title: Dependencias y slopsquatting
-desc: Paquetes inventados por la IA, cadena de suministro y cómo reducir superficie.
+desc: Dependencias y slopsquatting para detectar paquetes inventados o maliciosos, con comprobaciones previas a la instalación y medidas de seguridad.
 ---
 ## Slopsquatting
 Los modelos a veces **recomiendan paquetes que no existen**. Un atacante registra ese nombre con código malicioso; quien copia el `npm install` sin mirar lo instala. También pasa con typosquatting (`reqeusts`).

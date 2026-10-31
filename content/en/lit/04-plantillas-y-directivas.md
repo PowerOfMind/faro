@@ -1,6 +1,6 @@
 ---
 title: Templates and directives
-desc: The 4 binding types, lists, conditionals and the directives that are actually used.
+desc: Lit templates bind attributes, properties and events to data. Explore conditionals, list identity and directives for common UI patterns.
 pkgs: lit
 ---
 ## The golden rule of binding

@@ -1,6 +1,6 @@
 ---
 title: Secretos y claves de API
-desc: Dónde nunca pueden estar y qué hacer si se filtran.
+desc: Secretos y claves de API para desarrolladores web, con pautas de almacenamiento, prevención de filtraciones y respuesta ante una exposición.
 ---
 ## Regla
 Todo lo que llega al navegador es público: JS, HTML, variables `VITE_*` / `NEXT_PUBLIC_*`, mapas de fuentes. **Una clave en el cliente es una clave publicada.**

@@ -1,6 +1,6 @@
 ---
 title: Async, promises and errors
-desc: await in loops, Promise.all, cancellation, timeouts and error handling.
+desc: Async JavaScript becomes easier to manage with examples of parallel promises, cancellation, timeouts, fetch errors and race conditions.
 ---
 ## Parallel vs sequential
 ```js

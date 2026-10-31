@@ -1,6 +1,6 @@
 ---
 title: Entorno, CORS y variables
-desc: Fallos que no están en tu código: CORS, env vars, puertos, rutas de Windows, versiones de Node.
+desc: CORS y entorno de desarrollo para diagnosticar errores de red, variables, puertos y rutas, con comprobaciones útiles para el navegador y servidor.
 ---
 ## CORS
 El navegador bloquea la respuesta; el servidor sí la recibió.

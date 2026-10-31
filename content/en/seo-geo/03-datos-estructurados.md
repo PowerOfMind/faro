@@ -1,6 +1,6 @@
 ---
 title: Structured data (schema.org)
-desc: JSON-LD so search engines and models understand what each page is.
+desc: Structured data helps search engines interpret a page. Learn which schema.org types to use, how to add JSON-LD and validate the markup.
 ---
 Structured data describes the page in a format machines read without interpreting the text. It is added as **JSON-LD** in the `<head>`.
 

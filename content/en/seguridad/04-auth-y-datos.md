@@ -1,6 +1,6 @@
 ---
 title: Authentication, authorisation and database
-desc: Who you are is not what you can do; IDOR, RLS and sessions.
+desc: Authentication and authorisation protect user data. Learn server-side access checks, database rules, secure sessions and payment verification.
 ---
 ## Do not write it yourself
 For login use a proven solution (a managed provider or a mature library: Auth.js, Better Auth, Clerk, Supabase Auth, Firebase Auth). Hash with **Argon2id** or **bcrypt** if you store passwords. An AI can generate a login that "works" with subtle flaws (non-constant-time comparison, tokens that never expire, no attempt limit).

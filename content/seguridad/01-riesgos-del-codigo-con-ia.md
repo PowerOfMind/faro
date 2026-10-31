@@ -1,6 +1,6 @@
 ---
 title: Riesgos del código generado con IA
-desc: Qué falla de forma recurrente y cómo revisarlo antes de publicar.
+desc: Seguridad del código generado con IA para revisar una aplicación antes de publicarla, con riesgos frecuentes y comprobaciones de acceso y datos.
 ---
 El código generado **compila y parece correcto**. Eso es justo el riesgo: la IA optimiza que funcione en el ejemplo feliz, no que resista a un atacante.
 

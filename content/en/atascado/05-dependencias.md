@@ -1,6 +1,6 @@
 ---
 title: Dependencies that do not add up
-desc: ERESOLVE, peer deps, two versions of the same thing and lockfiles.
+desc: Dependency conflicts can block a project. Resolve peer version errors and duplicate packages while understanding lockfiles and ESM.
 ---
 ## ERESOLVE / peer dependency
 `npm` says A needs React 18 and you have 19.

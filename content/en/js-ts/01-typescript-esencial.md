@@ -1,6 +1,6 @@
 ---
 title: Essential TypeScript
-desc: Types you will use every day and the most common errors.
+desc: TypeScript essentials give developers practical types for everyday code, from interfaces and generics to unions, errors and configuration.
 pkgs: typescript
 ---
 ## The basics

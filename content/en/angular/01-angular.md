@@ -1,6 +1,6 @@
 ---
 title: Modern Angular
-desc: Standalone, signals, control flow and what replaces the old way.
+desc: Angular helps developers build modern components with standalone APIs, signals and control flow, with examples and common migration pitfalls.
 pkgs: "@angular/core", "@angular/cli"
 ---
 ## What changed (and the AI mixes up)

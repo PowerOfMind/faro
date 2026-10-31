@@ -1,6 +1,6 @@
 ---
 title: Events
-desc: Listening, dispatching, bubbles/composed and retargeting.
+desc: Lit events connect components to their surroundings. Learn to listen and dispatch, control bubbling across Shadow DOM and handle retargeting.
 pkgs: lit
 ---
 ## Listen

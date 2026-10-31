@@ -1,6 +1,6 @@
 ---
 title: Tipos utilidad y genéricos
-desc: Partial, Pick, Omit, Record, ReturnType, satisfies y friends.
+desc: Tipos utilidad y genéricos de TypeScript para transformar modelos, con ejemplos de Partial, Pick, Record, inferencia y comprobación de tipos.
 pkgs: typescript
 ---
 ## Los de uso diario

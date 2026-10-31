@@ -1,6 +1,6 @@
 ---
 title: Saving tokens and context
-desc: How to spend less without losing quality when working with coding agents.
+desc: AI token usage can grow with every message. Save context and money using project maps, focused reads, model choice and prompt caching.
 ---
 Tokens are spent on what the model **reads** (context) more than on what it writes. Every message resends the history.
 

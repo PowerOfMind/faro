@@ -1,6 +1,6 @@
 ---
 title: Reactive properties
-desc: "@property, @state, when it re-renders and the class fields trap."
+desc: Lit reactive properties control component updates. Learn when to use property or state, how attributes work and why mutations can fail.
 pkgs: lit
 ---
 ## Public or internal

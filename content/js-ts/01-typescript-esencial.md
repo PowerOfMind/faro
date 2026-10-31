@@ -1,6 +1,6 @@
 ---
 title: TypeScript esencial
-desc: Tipos que usarás cada día y los errores más comunes.
+desc: TypeScript esencial para desarrollar con tipos seguros, con ejemplos de uniones, genéricos, validación de datos y errores habituales.
 pkgs: typescript
 ---
 ## Lo básico

@@ -1,6 +1,6 @@
 ---
 title: Environment, CORS and variables
-desc: Failures that are not in your code: CORS, env vars, ports, Windows paths, Node versions.
+desc: CORS and environment issues can derail development. Diagnose server headers, exposed variables, ports, Windows paths and Node versions.
 ---
 ## CORS
 The browser blocks the response; the server did receive it.

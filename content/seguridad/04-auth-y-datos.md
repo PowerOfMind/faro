@@ -1,6 +1,6 @@
 ---
 title: Autenticación, autorización y base de datos
-desc: Quién eres no es lo mismo que qué puedes hacer; IDOR, RLS y sesiones.
+desc: Autenticación y autorización para proteger usuarios y datos, con ejemplos de control de acceso, sesiones y reglas de base de datos.
 ---
 ## No lo escribas tú
 Para login usa una solución probada (proveedor gestionado o librería madura: Auth.js, Better Auth, Clerk, Supabase Auth, Firebase Auth). Hashes con **Argon2id** o **bcrypt** si guardas contraseñas. Una IA puede generar un login que "funciona" con fallos sutiles (comparación no constante, tokens sin caducidad, sin límite de intentos).

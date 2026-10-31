@@ -1,6 +1,6 @@
 ---
 title: Verify what the AI tells you
-desc: Typical code hallucinations and quick checks before you trust an answer.
+desc: AI answer verification helps developers catch invented APIs, packages and commands using documentation, version checks and small tests.
 ---
 ## What gets invented most
 | What | How you notice |

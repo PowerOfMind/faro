@@ -1,6 +1,6 @@
 ---
 title: Web Components and what Lit adds
-desc: The 4 browser standards and the thin layer Lit puts on top.
+desc: Web Components provide browser-native building blocks. Learn custom elements, Shadow DOM and slots, plus how Lit simplifies components.
 pkgs: lit
 ---
 ## The 4 standards

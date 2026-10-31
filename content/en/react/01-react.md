@@ -1,6 +1,6 @@
 ---
 title: React: mental model and traps
-desc: Render, state, effects and what is new in React 19.
+desc: React fundamentals help developers reason about rendering, state and effects. Review common mistakes and an overview of React 19 features.
 pkgs: react, react-dom, next
 ---
 ## Mental model

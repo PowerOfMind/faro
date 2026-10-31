@@ -1,6 +1,6 @@
 ---
 title: Risks of AI-generated code
-desc: What fails again and again and how to review it before publishing.
+desc: AI-generated code can hide security flaws. Review common risks involving secrets, access control and input validation before publishing.
 ---
 Generated code **compiles and looks right**. That is exactly the risk: the AI optimises for it working in the happy-path example, not for resisting an attacker.
 

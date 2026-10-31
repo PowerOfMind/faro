@@ -1,6 +1,6 @@
 ---
 title: Modern JavaScript worth knowing
-desc: Native utilities that replace libraries, and the classic traps.
+desc: Modern JavaScript offers native alternatives to common libraries. Review useful operators, data utilities, modules and everyday traps.
 ---
 ## No library needed any more
 | Before | Now |

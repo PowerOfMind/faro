@@ -1,6 +1,6 @@
 ---
 title: Elegir: React, Angular, Lit y otros
-desc: Criterios prácticos, no modas.
+desc: Elegir framework para una aplicación o sitio web, comparando React, Angular, Lit y otras opciones según el equipo y las necesidades.
 ---
 | Si necesitas... | Considera | Nota |
 |---|---|---|

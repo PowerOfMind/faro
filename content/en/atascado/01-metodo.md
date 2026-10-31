@@ -1,6 +1,6 @@
 ---
 title: Breaking out of the AI loop
-desc: What to do when you are three attempts in and the error is still the same.
+desc: AI debugging helps developers break repeated failed fixes with minimal reproductions, testable hypotheses and a clear problem report.
 ---
 The pattern: the AI proposes a fix, it fails, it proposes a similar one, it fails. **Every attempt adds noise to the context.** Stop.
 

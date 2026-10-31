@@ -1,6 +1,6 @@
 ---
 title: Git and deployment
-desc: Conflicts, bad commits, 404s in production and builds that fail only in CI.
+desc: Git and deployment troubleshooting covers conflicts, lost commits, production route errors, environment differences and failed CI builds.
 ---
 ## Git: frequent situations
 | I want to | Command |

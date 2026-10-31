@@ -1,6 +1,6 @@
 ---
 title: SDKs and tools for AI apps
-desc: Libraries to call models, stream, do RAG and evaluate.
+desc: AI app tools support model calls, streaming, retrieval and evaluation. Compare SDKs and libraries with practical production guidance.
 pkgs: "@anthropic-ai/sdk", openai, ai, "@modelcontextprotocol/sdk", langchain
 ---
 | Need | Option |

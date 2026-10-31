@@ -1,6 +1,6 @@
 ---
 title: React Native y Expo
-desc: Bases prácticas para retomar una aplicación móvil con React Native y Expo.
+desc: React Native y Expo para desarrollar aplicaciones móviles con React, con componentes nativos, estilos, listas y diferencias con el DOM.
 pkgs: react-native, expo, expo-router
 ---
 ## Modelo mental: React sin DOM

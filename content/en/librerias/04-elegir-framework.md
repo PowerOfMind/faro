@@ -1,6 +1,6 @@
 ---
 title: Choosing: React, Angular, Lit and others
-desc: Practical criteria, not fashion.
+desc: Framework selection depends on your project and team. Compare React, Angular, Lit and other options by ecosystem, scope and trade-offs.
 ---
 | If you need... | Consider | Note |
 |---|---|---|

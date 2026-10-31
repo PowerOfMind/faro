@@ -1,6 +1,6 @@
 ---
 title: SEO técnico en una página
-desc: Lo mínimo que decide si te indexan y cómo te muestran.
+desc: SEO técnico para mejorar la indexación de una página, con pautas sobre títulos, descripciones, enlaces, imágenes y metadatos.
 ---
 ## Imprescindibles
 | Elemento | Regla |

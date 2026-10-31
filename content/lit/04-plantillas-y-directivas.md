@@ -1,6 +1,6 @@
 ---
 title: Plantillas y directivas
-desc: Los 4 tipos de binding, listas, condicionales y las directivas que sí se usan.
+desc: Plantillas y directivas de Lit para construir interfaces, con ejemplos de atributos, propiedades, eventos, condicionales y listas.
 pkgs: lit
 ---
 ## Regla de oro del binding

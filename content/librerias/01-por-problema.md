@@ -1,6 +1,6 @@
 ---
 title: Qué librería uso para...
-desc: Tabla de decisión rápida para el frontend y las herramientas de cada día.
+desc: Librerías frontend para elegir herramientas según el problema, con alternativas para pruebas, formularios, estado, estilos y validación.
 pkgs: vite, vitest, zod, "@tanstack/react-query", zustand, tailwindcss, "date-fns", playwright, eslint
 ---
 Una opción por defecto y cuándo mirar otra. Comprueba siempre mantenimiento y versión (ver abajo).

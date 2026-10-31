@@ -1,6 +1,6 @@
 ---
 title: Prompts que funcionan
-desc: Estructura corta para pedir código y análisis sin ida y vuelta.
+desc: Prompts para programar con IA que ayudan a obtener respuestas útiles, con una plantilla de contexto, objetivo, restricciones y comprobación.
 ---
 ## Plantilla
 ```text

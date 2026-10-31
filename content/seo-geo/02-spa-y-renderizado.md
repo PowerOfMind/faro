@@ -1,6 +1,6 @@
 ---
 title: SPA, SSR y SSG para SEO
-desc: Qué ve el rastreador según cómo renderizas.
+desc: SEO para SPA, SSR y SSG al elegir cómo renderizar una web, con diferencias entre rastreadores y comprobaciones del HTML inicial.
 ---
 ## Qué ve cada rastreador
 Google ejecuta JavaScript, pero lo hace en una segunda fase, con retraso y límites. Muchos otros rastreadores, previsualizaciones sociales y **bots de IA** no ejecutan JS o lo hacen de forma limitada. Lo que no esté en el HTML inicial puede no existir para ellos.

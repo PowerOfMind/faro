@@ -1,6 +1,6 @@
 ---
 title: Building agents
-desc: What an agent is, the basic loop and how not to lose control.
+desc: AI agents combine models and tools in a loop. Explore a TypeScript skeleton, practical limits and cases where a simpler solution fits.
 pkgs: "@anthropic-ai/sdk", "@modelcontextprotocol/sdk"
 ---
 ## What it is

@@ -1,6 +1,6 @@
 ---
 title: Styles, Shadow DOM and slots
-desc: Encapsulation, theming from outside with variables and ::part, and slots.
+desc: Lit styles and slots help developers build reusable components. Explore Shadow DOM encapsulation, external theming and content projection.
 pkgs: lit
 ---
 ## Styles

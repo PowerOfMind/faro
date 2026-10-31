@@ -1,6 +1,6 @@
 ---
 title: Async, promesas y errores
-desc: await en bucles, Promise.all, cancelación, timeouts y manejo de errores.
+desc: Async y promesas en JavaScript para controlar tareas concurrentes y errores, con ejemplos de Promise.all, cancelación y tiempos de espera.
 ---
 ## Paralelo vs secuencial
 ```js

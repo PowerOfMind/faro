@@ -1,6 +1,6 @@
 ---
 title: Which AI to use for what
-desc: Claude, ChatGPT, Gemini, Copilot and AI search tools: what each one is good for.
+desc: AI tools serve different tasks. Compare coding agents, chat assistants and AI search, and learn when to check sources or protect data.
 ---
 There is no "best" AI. There are tasks and tools. Try the same question in two of them before trusting one.
 

@@ -1,6 +1,6 @@
 ---
 title: Git y despliegue
-desc: Conflictos, commits mal hechos, 404 en producción y builds que fallan solo en CI.
+desc: Git y despliegue para resolver conflictos y fallos de producción, con comandos de recuperación y pistas para rutas, builds y diferencias de entorno.
 ---
 ## Git: situaciones frecuentes
 | Quiero | Comando |

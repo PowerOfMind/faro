@@ -1,6 +1,6 @@
 ---
 title: Qué IA usar para cada cosa
-desc: Claude, ChatGPT, Gemini, Copilot y buscadores con IA: para qué sirve cada uno.
+desc: IA para programar y crear contenido, con criterios para elegir entre asistentes, buscadores y agentes según la tarea y el contexto disponible.
 ---
 No hay una IA "mejor". Hay tareas y herramientas. Prueba la misma pregunta en dos antes de fiarte de una.
 

@@ -1,6 +1,6 @@
 ---
 title: MCP: connecting tools
-desc: What the Model Context Protocol is and what to watch when installing servers.
+desc: MCP connects AI agents to tools and data through a shared protocol. Learn about servers, setup, useful cases and security trade-offs.
 pkgs: "@modelcontextprotocol/sdk"
 ---
 **MCP** (Model Context Protocol) is an open standard that lets an agent use external tools and data (GitHub, databases, browser, calendar) through a common interface. An MCP server exposes *tools*, *resources* and *prompts*.

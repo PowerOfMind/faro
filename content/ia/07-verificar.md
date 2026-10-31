@@ -1,6 +1,6 @@
 ---
 title: Verificar lo que dice la IA
-desc: Alucinaciones típicas en código y comprobaciones rápidas.
+desc: Verificar respuestas de IA al programar, con comprobaciones de APIs, paquetes y versiones para detectar alucinaciones antes de usarlas.
 ---
 ## Lo que más se inventa
 | Qué | Cómo se nota |

@@ -1,6 +1,6 @@
 ---
 title: Which library do I use for...
-desc: A quick decision table for the frontend and everyday tools.
+desc: Frontend libraries solve common development needs. Compare practical defaults and alternatives for data, styling, testing and tooling.
 pkgs: vite, vitest, zod, "@tanstack/react-query", zustand, tailwindcss, "date-fns", playwright, eslint
 ---
 A default option and when to look at another. Always check maintenance and version (see below).

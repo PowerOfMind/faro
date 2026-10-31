@@ -1,6 +1,6 @@
 ---
 title: APIs obsoletas o inventadas
-desc: El fallo número uno del código generado y cómo detectarlo.
+desc: APIs obsoletas o inventadas en código generado por IA, con pistas para detectar versiones incompatibles y contrastar la documentación real.
 ---
 ## Por qué pasa
 El modelo aprende de código de **muchas versiones a la vez**. Mezcla `react-router` v5 con v7, Next `pages/` con `app/`, Angular con NgModules con standalone, Tailwind 3 con 4, Lit 2 con 3.

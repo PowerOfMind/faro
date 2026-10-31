@@ -1,6 +1,6 @@
 ---
 title: Dependencies and slopsquatting
-desc: Packages invented by AI, supply chain and how to reduce your surface.
+desc: Dependency security helps developers spot slopsquatting and risky packages. Check maintainers, install scripts, lockfiles and audit tools.
 ---
 ## Slopsquatting
 Models sometimes **recommend packages that do not exist**. An attacker registers that name with malicious code; whoever copies the `npm install` without looking installs it. It also happens with typosquatting (`reqeusts`).

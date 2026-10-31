@@ -1,6 +1,6 @@
 ---
 title: CSS que no obedece
-desc: z-index, scroll horizontal, 100vh móvil, flex que desborda, Safari.
+desc: CSS que no obedece en interfaces web, con soluciones para z-index, desbordamientos, alturas móviles y problemas de Flexbox y Grid.
 ---
 ## z-index no funciona
 Crea un **contexto de apilamiento** el ancestro con `position`+`z-index`, `transform`, `opacity<1`, `filter`, `isolation`. Un hijo nunca sale de él. Soluciona subiendo el ancestro, o sacando el elemento (modales: `<dialog>` + `showModal()` o un portal).

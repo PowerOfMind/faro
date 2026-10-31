@@ -1,6 +1,6 @@
 ---
 title: React Native and Expo
-desc: Practical foundations for returning to a mobile app with React Native and Expo.
+desc: React Native and Expo help React developers build mobile apps. Learn native components, styling, navigation, device access and debugging.
 pkgs: react-native, expo, expo-router
 ---
 ## Mental model: React without the DOM

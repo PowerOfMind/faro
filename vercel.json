@@ -1,4 +1,7 @@
 {
+  "buildCommand": "SITE_URL=https://lighthub-dev.vercel.app python3 build.py",
+  "outputDirectory": "dist",
+  "installCommand": "",
   "headers": [
     {
       "source": "/(.*)",

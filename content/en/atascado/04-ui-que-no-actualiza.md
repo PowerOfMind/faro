@@ -1,6 +1,6 @@
 ---
 title: The UI does not update or flickers
-desc: Stale state, hydration mismatch, keys, looping effects and mutations.
+desc: UI rendering problems frustrate developers. Trace stale state, mutations, looping effects, hydration mismatches and unstable list keys.
 ---
 ## Stale state (stale closure)
 A callback captured the old value.

@@ -1,6 +1,6 @@
 ---
 title: Dependencias que no cuadran
-desc: ERESOLVE, peer deps, dos versiones de lo mismo y lockfiles.
+desc: Dependencias incompatibles en proyectos JavaScript, con pasos para resolver errores ERESOLVE, versiones duplicadas y problemas de lockfile.
 ---
 ## ERESOLVE / peer dependency
 `npm` dice que A necesita React 18 y tienes 19.

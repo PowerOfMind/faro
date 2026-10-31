@@ -1,6 +1,6 @@
 ---
 title: Secrets and API keys
-desc: Where they must never be and what to do if they leak.
+desc: API key security helps developers prevent leaks. Learn where secrets belong, how to restrict access and what to do after exposure.
 ---
 ## Rule
 Everything that reaches the browser is public: JS, HTML, `VITE_*` / `NEXT_PUBLIC_*` variables, source maps. **A key in the client is a published key.**

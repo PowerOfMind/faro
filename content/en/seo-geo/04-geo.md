@@ -1,6 +1,6 @@
 ---
 title: GEO: getting cited by AI models
-desc: Generative Engine Optimization: what is known and what is hype.
+desc: GEO helps site owners make content useful to AI search. Explore crawlable pages, citable answers, bot controls and the limits of llms.txt.
 ---
 **GEO** aims to get AI search tools (AI Overviews, ChatGPT with search, Perplexity, Copilot) to use you as a **cited source**. It is SEO with nuances: you no longer compete only for a click but for appearing inside the answer.
 

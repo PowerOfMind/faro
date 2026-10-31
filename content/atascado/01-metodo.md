@@ -1,6 +1,6 @@
 ---
 title: Salir del bucle con la IA
-desc: Qué hacer cuando llevas tres intentos y el error sigue igual.
+desc: Depuración con IA para salir de intentos repetidos, reproducir errores, contrastar hipótesis y aportar contexto útil en una conversación nueva.
 ---
 El patrón: la IA propone un arreglo, falla, propone otro parecido, falla. **Cada intento añade ruido al contexto.** Para.
 

@@ -1,6 +1,6 @@
 ---
 title: Angular moderno
-desc: Standalone, signals, control flow y lo que sustituye a lo antiguo.
+desc: Angular moderno para desarrolladores que actualizan proyectos, con componentes standalone, signals, control flow e inyección de dependencias.
 pkgs: "@angular/core", "@angular/cli"
 ---
 ## Lo que cambió (y la IA mezcla)

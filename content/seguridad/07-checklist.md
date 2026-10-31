@@ -1,6 +1,6 @@
 ---
 title: Checklist antes de publicar
-desc: 20 comprobaciones de seguridad, privacidad y calidad para una app hecha con IA.
+desc: Checklist de seguridad antes de publicar una app con IA, con veinte comprobaciones de secretos, acceso, datos, navegador y calidad.
 ---
 ## Secretos y configuración
 1. Ninguna clave en el cliente ni en el historial de git.

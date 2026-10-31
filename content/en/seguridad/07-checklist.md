@@ -1,6 +1,6 @@
 ---
 title: Checklist before publishing
-desc: 20 security, privacy and quality checks for an app built with AI.
+desc: Security checklist for AI-built apps covers 20 prelaunch checks across secrets, access, browser protections, privacy and quality.
 ---
 ## Secrets and configuration
 1. No key in the client or in the git history.

@@ -1,6 +1,6 @@
 ---
 title: Outdated or invented APIs
-desc: The number one failure of generated code and how to detect it.
+desc: Outdated or invented APIs can break generated code. Learn to check installed versions, TypeScript definitions and migration guides.
 ---
 ## Why it happens
 The model learns from code of **many versions at once**. It mixes `react-router` v5 with v7, Next `pages/` with `app/`, Angular NgModules with standalone, Tailwind 3 with 4, Lit 2 with 3.

@@ -1,6 +1,6 @@
 ---
 title: Datos estructurados (schema.org)
-desc: JSON-LD para que buscadores y modelos entiendan qué es cada página.
+desc: Datos estructurados con schema.org para describir páginas a buscadores, con tipos habituales, ejemplos JSON-LD y pautas de validación.
 ---
 Los datos estructurados describen la página en un formato que las máquinas leen sin interpretar el texto. Se añaden como **JSON-LD** en el `<head>`.
 

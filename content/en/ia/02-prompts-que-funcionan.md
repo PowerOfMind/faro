@@ -1,6 +1,6 @@
 ---
 title: Prompts that work
-desc: A short structure for asking for code and analysis without back-and-forth.
+desc: Prompts for coding work better with context, a clear goal and constraints. Use a practical template and examples to reduce back-and-forth.
 ---
 ## Template
 ```text

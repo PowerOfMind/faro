@@ -1,6 +1,6 @@
 ---
 title: Technical SEO on one page
-desc: The minimum that decides whether you get indexed and how you are displayed.
+desc: Technical SEO helps site owners improve indexing and search appearance with metadata, crawl controls, sitemaps and Core Web Vitals.
 ---
 ## Essentials
 | Element | Rule |

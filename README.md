@@ -20,5 +20,13 @@ Las secciones se declaran en `T` de `build.py` para cada idioma; el nombre del s
 - `.github/workflows/pages.yml`: construye y publica en GitHub Pages en cada push a `main`.
 - Fuentes vigiladas: `data/fuentes.json`.
 
+## Despliegue
+
+El proyecto de Vercel `lighthub-dev`, conectado a `PowerOfMind/lighthub-dev`, construye y despliega producción con cada push a `main`. La configuración de la raíz ejecuta `SITE_URL=https://lighthub-dev.vercel.app python3 build.py`, sin instalar dependencias, y publica `dist/`. GitHub Pages también se publica con cada push a `main`.
+
+Para desplegar manualmente en Vercel, construye primero con `SITE_URL=https://lighthub-dev.vercel.app` y después, desde `dist/`, ejecuta `vercel link --yes --project lighthub-dev` y `vercel deploy --prod --yes`. El generador elimina las opciones de construcción del `vercel.json` de `dist/` y conserva las cabeceras y redirecciones.
+
+En Vercel se mide el número de visitas con Vercel Web Analytics, sin cookies ni identificación de personas, mediante datos agregados y sin fingerprinting persistente. GitHub Pages no incluye esta analítica. Más información en la página de privacidad.
+
 ## SEO/GEO del propio sitio
 Título y descripción únicos, canonical, Open Graph, JSON-LD `TechArticle`, `sitemap.xml`, `robots.txt` y `llms.txt` (con `SITE_URL` definido).

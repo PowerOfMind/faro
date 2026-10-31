@@ -1,6 +1,6 @@
 ---
 title: SPA, SSR and SSG for SEO
-desc: What the crawler sees depending on how you render.
+desc: SPA, SSR and SSG rendering affect what search engines and AI crawlers see. Compare strategies, route metadata, navigation and languages.
 ---
 ## What each crawler sees
 Google runs JavaScript, but in a second phase, with delay and limits. Many other crawlers, social previews and **AI bots** do not run JS or do so in a limited way. What is not in the initial HTML may not exist for them.

@@ -1,6 +1,6 @@
 ---
 title: Skills, comandos y hooks
-desc: Empaquetar tu forma de trabajar para que el agente la repita igual.
+desc: Skills, comandos y hooks para configurar agentes de código, con ejemplos de instrucciones reutilizables y criterios para automatizar tareas.
 ---
 ## Skill
 Carpeta con un `SKILL.md`: instrucciones que el agente carga **solo cuando la tarea encaja** (por eso ahorran contexto).

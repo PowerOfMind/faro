@@ -1,6 +1,6 @@
 ---
 title: CSS that does not obey
-desc: z-index, horizontal scroll, mobile 100vh, overflowing flex, Safari.
+desc: CSS debugging helps developers fix stacking contexts, horizontal overflow, flex and grid sizing, mobile viewport height and touch issues.
 ---
 ## z-index does not work
 An ancestor with `position`+`z-index`, `transform`, `opacity<1`, `filter` or `isolation` creates a **stacking context**. A child never escapes it. Fix by raising the ancestor, or moving the element out (modals: `<dialog>` + `showModal()` or a portal).

@@ -1,6 +1,6 @@
 ---
 title: Propiedades reactivas
-desc: "@property, @state, cuándo se re-renderiza y la trampa de los class fields."
+desc: Reactividad en Lit para entender cuándo se actualiza un componente, con propiedades públicas, estado interno, mutaciones y class fields.
 pkgs: lit
 ---
 ## Pública o interna

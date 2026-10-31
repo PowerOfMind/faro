@@ -1,6 +1,6 @@
 ---
 title: Inyección y XSS
-desc: SQL, HTML, comandos y cabeceras que cierran la puerta.
+desc: Inyección y XSS en aplicaciones web, con medidas para proteger consultas SQL, contenido HTML y comandos frente a entradas no fiables.
 ---
 ## SQL
 ```ts

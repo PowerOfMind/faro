@@ -1,6 +1,6 @@
 ---
 title: Ciclo de vida
-desc: Orden exacto de los callbacks y qué poner en cada uno.
+desc: Ciclo de vida de Lit para decidir dónde colocar cada operación, con el orden de callbacks, renderizado, actualización y limpieza.
 pkgs: lit
 ---
 ## Primer render, en orden

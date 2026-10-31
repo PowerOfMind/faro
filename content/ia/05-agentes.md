@@ -1,6 +1,6 @@
 ---
 title: Crear agentes
-desc: Qué es un agente, el bucle básico y cómo no perder el control.
+desc: Agentes de IA para desarrolladores, con un bucle básico en TypeScript, herramientas y límites de ejecución para mantener el control.
 pkgs: "@anthropic-ai/sdk", "@modelcontextprotocol/sdk"
 ---
 ## Qué es

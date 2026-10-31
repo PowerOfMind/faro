@@ -1,6 +1,6 @@
 ---
 title: JavaScript moderno que conviene conocer
-desc: Utilidades nativas que sustituyen librerías y trampas de siempre.
+desc: JavaScript moderno para reducir dependencias y evitar errores comunes, con utilidades nativas para arrays, objetos, fechas y navegador.
 ---
 ## Que ya no necesitan librería
 | Antes | Ahora |

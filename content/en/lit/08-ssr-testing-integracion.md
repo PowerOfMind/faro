@@ -1,6 +1,6 @@
 ---
 title: SSR, testing and framework integration
-desc: Testing Lit, server rendering, using it in React and migrating from Lit 1/2.
+desc: Lit testing and integration covers browser tests, server rendering, React and Angular wrappers, and migration from earlier Lit versions.
 pkgs: lit, "@lit/react", "@lit-labs/ssr", "@web/test-runner"
 ---
 ## Testing

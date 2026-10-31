@@ -1,6 +1,6 @@
 ---
 title: Lifecycle
-desc: The exact order of the callbacks and what to put in each.
+desc: Lit lifecycle callbacks determine when components render and update. Follow their order and learn where to put setup and derived values.
 pkgs: lit
 ---
 ## First render, in order

@@ -1,6 +1,6 @@
 ---
 title: Skills, commands and hooks
-desc: Package the way you work so the agent repeats it the same way.
+desc: AI skills, commands and hooks help teams repeat workflows. Learn how each works, when instructions load and how to keep them useful.
 ---
 ## Skill
 A folder with a `SKILL.md`: instructions the agent loads **only when the task fits** (which is why they save context).

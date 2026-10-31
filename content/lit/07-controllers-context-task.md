@@ -1,6 +1,6 @@
 ---
 title: Controllers, Context y Task
-desc: Reutilizar lógica, evitar prop drilling y manejar async con estados.
+desc: Controllers, Context y Task en Lit para reutilizar lógica y compartir datos, con ejemplos de ciclo de vida y tareas asíncronas.
 pkgs: lit, @lit/context, @lit/task
 ---
 ## Reactive Controllers

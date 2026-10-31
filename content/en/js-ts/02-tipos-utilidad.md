@@ -1,6 +1,6 @@
 ---
 title: Utility types and generics
-desc: Partial, Pick, Omit, Record, ReturnType, satisfies and friends.
+desc: TypeScript utility types and generics help developers reuse type definitions with Partial, Pick, satisfies and constrained generics.
 pkgs: typescript
 ---
 ## The everyday ones

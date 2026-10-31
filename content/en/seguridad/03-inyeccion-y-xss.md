@@ -1,6 +1,6 @@
 ---
 title: Injection and XSS
-desc: SQL, HTML, commands and the headers that close the door.
+desc: Injection and XSS prevention helps developers secure SQL, HTML and system commands with parameterisation, sanitisation and headers.
 ---
 ## SQL
 ```ts

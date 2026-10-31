@@ -1,6 +1,6 @@
 ---
 title: Controllers, Context and Task
-desc: Reusing logic, avoiding prop drilling and handling async with states.
+desc: Lit controllers, Context and Task help share component logic, pass data without prop drilling and handle asynchronous state in the UI.
 pkgs: lit, @lit/context, @lit/task
 ---
 ## Reactive Controllers

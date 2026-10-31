@@ -1,6 +1,6 @@
 ---
 title: MCP: conectar herramientas
-desc: Qué es el Model Context Protocol y qué cuidar al instalar servidores.
+desc: MCP para conectar agentes con herramientas y datos externos, con instrucciones de instalación y criterios para evaluar coste y seguridad.
 pkgs: "@modelcontextprotocol/sdk"
 ---
 **MCP** (Model Context Protocol) es un estándar abierto para que un agente use herramientas y datos externos (GitHub, bases de datos, navegador, calendario) con una interfaz común. Un servidor MCP expone *herramientas*, *recursos* y *prompts*.

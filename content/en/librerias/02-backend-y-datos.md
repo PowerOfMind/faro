@@ -1,6 +1,6 @@
 ---
 title: Backend, data and authentication
-desc: Server, databases, ORMs, auth and managed services.
+desc: Backend tools help developers choose APIs, databases, ORMs and authentication. Compare managed services and hosting with design advice.
 pkgs: hono, express, drizzle-orm, prisma, "better-auth", "next-auth"
 ---
 | Need | Default | Alternative |

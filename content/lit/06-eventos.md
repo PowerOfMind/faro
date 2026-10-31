@@ -1,6 +1,6 @@
 ---
 title: Eventos
-desc: Escuchar, despachar, bubbles/composed y retargeting.
+desc: Eventos en Lit para comunicar componentes, con ejemplos de escucha y despacho, propagación por Shadow DOM y limpieza de listeners.
 pkgs: lit
 ---
 ## Escuchar

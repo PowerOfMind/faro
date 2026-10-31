@@ -1,6 +1,6 @@
 ---
 title: Backend, datos y autenticación
-desc: Servidor, bases de datos, ORMs, auth y servicios gestionados.
+desc: Backend y datos para elegir herramientas de servidor, bases de datos y autenticación, con alternativas para pagos, correo y almacenamiento.
 pkgs: hono, express, drizzle-orm, prisma, "better-auth", "next-auth"
 ---
 | Necesidad | Por defecto | Alternativa |

@@ -1,6 +1,6 @@
 ---
 title: Privacidad
-desc: Cómo trata LightHub Dev la información al visitar el sitio.
+desc: Privacidad en LightHub Dev para quienes visitan el sitio, con detalles sobre almacenamiento local, servicios externos y analítica de visitas.
 ---
 ## Datos y almacenamiento
 
@@ -12,4 +12,4 @@ El ejecutor de código carga módulos desde [esm.sh](https://esm.sh), que recibe
 
 ## Cookies y contacto
 
-El sitio no usa cookies ni herramientas de analítica. Si tienes alguna pregunta, puedes abrir una incidencia en [GitHub](https://github.com/PowerOfMind/lighthub-dev/issues).
+En Vercel, el sitio mide el número de visitas con Vercel Web Analytics, sin cookies ni identificación de personas: utiliza datos agregados y no hace fingerprinting persistente. En GitHub Pages no se incluye esta analítica. Si tienes alguna pregunta, puedes abrir una incidencia en [GitHub](https://github.com/PowerOfMind/lighthub-dev/issues).

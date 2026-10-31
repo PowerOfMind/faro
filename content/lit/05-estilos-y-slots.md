@@ -1,6 +1,6 @@
 ---
 title: Estilos, Shadow DOM y slots
-desc: Encapsulación, theming desde fuera con variables y ::part, y slots.
+desc: Estilos y slots en Lit para crear componentes personalizables, con Shadow DOM, variables CSS, partes exportadas y proyección de contenido.
 pkgs: lit
 ---
 ## Estilos

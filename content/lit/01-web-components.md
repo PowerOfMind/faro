@@ -1,6 +1,6 @@
 ---
 title: Web Components y qué añade Lit
-desc: Los 4 estándares del navegador y la capa fina de Lit encima.
+desc: Web Components y Lit para crear componentes reutilizables, con una introducción a Custom Elements, Shadow DOM, plantillas y módulos.
 pkgs: lit
 ---
 ## Los 4 estándares

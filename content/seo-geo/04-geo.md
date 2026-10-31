@@ -1,6 +1,6 @@
 ---
 title: GEO: que te citen los modelos
-desc: Generative Engine Optimization, qué se sabe y qué es humo.
+desc: GEO para mejorar la visibilidad de contenidos en respuestas de IA, con prácticas de SEO, fuentes citables y control de rastreadores.
 ---
 **GEO** busca que buscadores con IA (AI Overviews, ChatGPT con búsqueda, Perplexity, Copilot) te usen como **fuente citada**. Es SEO con matices: ya no compites solo por un clic, sino por aparecer dentro de la respuesta.
 

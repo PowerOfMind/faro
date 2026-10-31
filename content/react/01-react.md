@@ -1,6 +1,6 @@
 ---
 title: React: modelo mental y trampas
-desc: Render, estado, efectos y las novedades de React 19.
+desc: React para entender el renderizado y evitar errores de estado, con reglas de hooks, efectos, listas y novedades de React 19.
 pkgs: react, react-dom, next
 ---
 ## Modelo mental

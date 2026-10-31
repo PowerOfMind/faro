@@ -1,6 +1,6 @@
 ---
 title: SSR, testing e integración con frameworks
-desc: Probar Lit, renderizar en servidor, usarlo en React y migrar de Lit 1/2.
+desc: Testing y SSR en Lit para integrar componentes con confianza, con pruebas en navegador, renderizado en servidor y uso desde React.
 pkgs: lit, "@lit/react", "@lit-labs/ssr", "@web/test-runner"
 ---
 ## Testing

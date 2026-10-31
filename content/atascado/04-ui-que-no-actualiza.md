@@ -1,6 +1,6 @@
 ---
 title: La UI no se actualiza o parpadea
-desc: Estado obsoleto, hydration mismatch, keys, efectos en bucle y mutaciones.
+desc: UI que no se actualiza o parpadea en React, Lit y otros frameworks, con causas de estado obsoleto, mutaciones y efectos en bucle.
 ---
 ## Estado obsoleto (stale closure)
 Un callback capturó el valor viejo.

@@ -124,3 +124,108 @@ Mide antes de optimizar: revisa filas, claves estables y `extraData` si una `Fla
 - En AsyncStorage sin cifrar
 * En SecureStore cuando corresponda
 ! SecureStore usa almacenamiento protegido de la plataforma.
+=== prueba
+
+> [!NOTE] Esta prueba usa React Native Web en el navegador. Expo Router y las API nativas requieren un dispositivo o Expo Go.
+
+## Texto y estilos
+Combina View, Text y StyleSheet para crear una tarjeta.
+```jsx
+import { View, Text, StyleSheet } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  return <View style={styles.card}><Text style={styles.title}>Hola, React Native</Text><Text>Una tarjeta sencilla.</Text></View>;
+}
+const styles = StyleSheet.create({ card: { padding: 16, borderWidth: 1, borderRadius: 8 }, title: { fontSize: 20, fontWeight: 'bold' } });
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: cambia el tamaño del título y observa el resultado.
+
+## Contador con estado
+Pressable actualiza el estado al pulsarlo.
+```jsx
+import { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [cuenta, setCuenta] = useState(0);
+  return <View><Text>Cuenta: {cuenta}</Text><Pressable accessibilityRole="button" accessibilityLabel="Sumar uno" onPress={() => setCuenta(cuenta + 1)}><Text>Sumar uno</Text></Pressable></View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: cambia el incremento de uno a cinco.
+
+## Entrada controlada
+El valor de TextInput procede del estado.
+```jsx
+import { useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [nombre, setNombre] = useState('');
+  return <View><Text>Tu nombre</Text><TextInput accessibilityLabel="Tu nombre" value={nombre} onChangeText={setNombre} style={{ borderWidth: 1, padding: 8 }} /><Text>Hola, {nombre || 'visitante'}</Text></View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: cambia el saludo que aparece mientras el campo está vacío.
+
+## Lista con claves
+FlatList usa keyExtractor para identificar cada elemento.
+```jsx
+import { FlatList, Text } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+const datos = [{ id: '1', nombre: 'Sol' }, { id: '2', nombre: 'Luna' }, { id: '3', nombre: 'Mar' }];
+function App() {
+  return <FlatList data={datos} keyExtractor={(item) => item.id} renderItem={({ item }) => <Text style={{ padding: 8 }}>{item.nombre}</Text>} />;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: añade un elemento con un id distinto.
+
+## Flexbox interactivo
+Los botones cambian la dirección y la distribución del eje principal.
+```jsx
+import { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [direccion, setDireccion] = useState('row');
+  const [distribucion, setDistribucion] = useState('flex-start');
+  return <View>
+    <Pressable accessibilityRole="button" onPress={() => setDireccion(direccion === 'row' ? 'column' : 'row')}><Text>Dirección: {direccion}</Text></Pressable>
+    <Pressable accessibilityRole="button" onPress={() => setDistribucion(distribucion === 'flex-start' ? 'space-between' : 'flex-start')}><Text>Distribución: {distribucion}</Text></Pressable>
+    <View style={{ height: 130, borderWidth: 1, flexDirection: direccion, justifyContent: distribucion }}>
+      <Text>A</Text><Text>B</Text><Text>C</Text>
+    </View>
+  </View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: cambia space-between por center y pulsa el botón de distribución.
+
+## Interruptor y carga
+El efecto simula una carga y cancela el temporizador al cambiar el interruptor.
+```jsx
+import { useEffect, useState } from 'react';
+import { View, Text, Switch, ActivityIndicator } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [activo, setActivo] = useState(false);
+  const [cargando, setCargando] = useState(false);
+  useEffect(() => {
+    if (!activo) { setCargando(false); return; }
+    setCargando(true);
+    const timer = setTimeout(() => setCargando(false), 2000);
+    return () => clearTimeout(timer);
+  }, [activo]);
+  return <View><Text>Simular carga</Text><Switch accessibilityLabel="Simular carga" value={activo} onValueChange={setActivo} />{cargando ? <ActivityIndicator color="currentColor" /> : <Text>{activo ? 'Listo' : 'Desactivado'}</Text>}</View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: cambia la duración del temporizador a cuatro segundos.

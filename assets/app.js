@@ -116,15 +116,29 @@
     'lit': 'https://esm.sh/lit@3.2.1', 'lit/': 'https://esm.sh/lit@3.2.1/',
     '@lit/reactive-element': 'https://esm.sh/@lit/reactive-element@2.0.4', '@lit/reactive-element/': 'https://esm.sh/@lit/reactive-element@2.0.4/',
     'lit-html': 'https://esm.sh/lit-html@3.2.1', 'lit-html/': 'https://esm.sh/lit-html@3.2.1/',
-    '@lit/context': 'https://esm.sh/@lit/context@1.1.3', '@lit/task': 'https://esm.sh/@lit/task@1.0.1' } };
+    '@lit/context': 'https://esm.sh/@lit/context@1.1.3', '@lit/task': 'https://esm.sh/@lit/task@1.0.1',
+    'react': 'https://esm.sh/react@19.1.0', 'react/': 'https://esm.sh/react@19.1.0/',
+    'react-dom': 'https://esm.sh/react-dom@19.1.0?deps=react@19.1.0',
+    'react-dom/client': 'https://esm.sh/react-dom@19.1.0/client?deps=react@19.1.0',
+    'react-native': 'https://esm.sh/react-native-web@0.21.0?deps=react@19.1.0,react-dom@19.1.0',
+    'sucrase': 'https://esm.sh/sucrase@3.35.0' } };
   var VARS = ['--bg', '--surface', '--surface-2', '--text', '--muted', '--line', '--primary', '--primary-ink', '--primary-soft', '--ok', '--bad', '--warn'];
   var seq = 0;
   function run(sec) {
     var id = sec.dataset.id = sec.dataset.id || String(++seq), cs = getComputedStyle(d.documentElement);
     var vars = VARS.map(function (v) { return v + ':' + cs.getPropertyValue(v); }).join(';');
-    var js = $('.tj', sec).value.replace(/<\/script/gi, '<\\/script');
+    var editor = $('.tj', sec), js = editor.value.replace(/<\/script/gi, '<\\/script');
+    if (editor.dataset.jsx) {
+      var source = JSON.stringify(editor.value).replace(/</g, '\\u003c');
+      var transforms = editor.dataset.ts ? '["typescript","jsx"]' : '["jsx"]';
+      js = 'import {transform} from "sucrase"; try { var code = transform(' + source + ',{transforms:' + transforms + ',jsxRuntime:"automatic"}).code;' +
+        'var url = URL.createObjectURL(new Blob([code],{type:"text/javascript"})); try { await import(url); } finally { URL.revokeObjectURL(url); }' +
+        '} catch(e) { console.error(e.stack || e.message || String(e)); }';
+    }
     var doc = '<!doctype html><html><head><meta charset="utf-8"><script type="importmap">' + JSON.stringify(IMPORTS) + '<\/script>' +
-      '<style>:root{' + vars + '}body{font:15px/1.5 system-ui;color:var(--text);background:var(--surface);margin:0;padding:12px}button{font:inherit;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);cursor:pointer}pre{white-space:pre-wrap;background:var(--surface-2);padding:8px;border-radius:8px}</style>' +
+      '<style>:root{' + vars + '}body{font:15px/1.5 system-ui;color:var(--text);background:var(--surface);margin:0;padding:12px}' +
+      (editor.dataset.jsx ? '#app{color:var(--text);background:var(--surface)}#app *{color:inherit}:focus-visible{outline:2px solid var(--primary);outline-offset:2px}' : '') +
+      'button{font:inherit;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);cursor:pointer}pre{white-space:pre-wrap;background:var(--surface-2);padding:8px;border-radius:8px}</style>' +
       '<script>(function(){function s(a){return a.map(function(x){try{return typeof x==="string"?x:JSON.stringify(x)}catch(e){return String(x)}}).join(" ")}' +
       '["log","warn","error"].forEach(function(k){var o=console[k];console[k]=function(){parent.postMessage({lighthub:' + id + ',k:k,t:s([].slice.call(arguments))},"*");o.apply(console,arguments)}});' +
       'addEventListener("error",function(e){parent.postMessage({lighthub:' + id + ',k:"error",t:e.message},"*")})})()<\/script></head><body>' +

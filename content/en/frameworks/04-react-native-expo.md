@@ -124,3 +124,108 @@ Measure before optimising: inspect rows, stable keys and `extraData` if a `FlatL
 - In unencrypted AsyncStorage
 * In SecureStore where appropriate
 ! SecureStore uses platform-protected storage.
+=== prueba
+
+> [!NOTE] This playground uses React Native Web in the browser. Expo Router and native APIs require a device or Expo Go.
+
+## Text and styles
+Combine View, Text and StyleSheet to create a card.
+```jsx
+import { View, Text, StyleSheet } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  return <View style={styles.card}><Text style={styles.title}>Hello, React Native</Text><Text>A simple card.</Text></View>;
+}
+const styles = StyleSheet.create({ card: { padding: 16, borderWidth: 1, borderRadius: 8 }, title: { fontSize: 20, fontWeight: 'bold' } });
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: change the title size and see the result.
+
+## State with a counter
+Pressable updates state when pressed.
+```jsx
+import { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [count, setCount] = useState(0);
+  return <View><Text>Count: {count}</Text><Pressable accessibilityRole="button" accessibilityLabel="Add one" onPress={() => setCount(count + 1)}><Text>Add one</Text></Pressable></View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: change the increment from one to five.
+
+## Controlled input
+The TextInput value comes from state.
+```jsx
+import { useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [name, setName] = useState('');
+  return <View><Text>Your name</Text><TextInput accessibilityLabel="Your name" value={name} onChangeText={setName} style={{ borderWidth: 1, padding: 8 }} /><Text>Hello, {name || 'visitor'}</Text></View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: change the greeting shown while the field is empty.
+
+## List with keys
+FlatList uses keyExtractor to identify each item.
+```jsx
+import { FlatList, Text } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+const data = [{ id: '1', name: 'Sun' }, { id: '2', name: 'Moon' }, { id: '3', name: 'Sea' }];
+function App() {
+  return <FlatList data={data} keyExtractor={(item) => item.id} renderItem={({ item }) => <Text style={{ padding: 8 }}>{item.name}</Text>} />;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: add an item with a different id.
+
+## Interactive flexbox
+The buttons change the direction and distribution along the main axis.
+```jsx
+import { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [direction, setDirection] = useState('row');
+  const [distribution, setDistribution] = useState('flex-start');
+  return <View>
+    <Pressable accessibilityRole="button" onPress={() => setDirection(direction === 'row' ? 'column' : 'row')}><Text>Direction: {direction}</Text></Pressable>
+    <Pressable accessibilityRole="button" onPress={() => setDistribution(distribution === 'flex-start' ? 'space-between' : 'flex-start')}><Text>Distribution: {distribution}</Text></Pressable>
+    <View style={{ height: 130, borderWidth: 1, flexDirection: direction, justifyContent: distribution }}>
+      <Text>A</Text><Text>B</Text><Text>C</Text>
+    </View>
+  </View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: replace space-between with center and press the distribution button.
+
+## Switch and loading
+The effect simulates loading and cancels the timer when the switch changes.
+```jsx
+import { useEffect, useState } from 'react';
+import { View, Text, Switch, ActivityIndicator } from 'react-native';
+import { createRoot } from 'react-dom/client';
+
+function App() {
+  const [active, setActive] = useState(false);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!active) { setLoading(false); return; }
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, [active]);
+  return <View><Text>Simulate loading</Text><Switch accessibilityLabel="Simulate loading" value={active} onValueChange={setActive} />{loading ? <ActivityIndicator color="currentColor" /> : <Text>{active ? 'Ready' : 'Off'}</Text>}</View>;
+}
+createRoot(document.getElementById('app')).render(<App />);
+```
+Reto: change the timer duration to four seconds.

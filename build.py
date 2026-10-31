@@ -267,13 +267,13 @@ def shell(lang, pages, base, cur, title, desc, main, rel, alts, ld="", mdurl="",
 T["es"].update(
     tabs=dict(leccion="Lección", esquema="Esquema", test="Test", prueba="Pruébalo"), tabl="Secciones del tema",
     ok="¡Correcto!", ko="Incorrecto.", score="Aciertos", run="Ejecutar", reset="Restaurar", reto="Reto", clave="Idea clave",
-    result="Resultado", retry="Reintentar", cons="Consola", sandbox="Se ejecuta en tu navegador, aislado.", jsl="JavaScript",
+    result="Resultado", retry="Reintentar", cons="Consola", sandbox="Se ejecuta en tu navegador, aislado.", jsl="JavaScript", jsx="JSX", tsx="TSX",
     secl="Secciones", qn="Pregunta {n} de {m}", kick="Guía {n} de {m} · {s}", prev="Anterior", next="Siguiente",
     st_g="guías", st_s="secciones", st_l="idiomas", start="Empezar", cont="Continuar", readn="{a} de {b} leídas")
 T["en"].update(
     tabs=dict(leccion="Lesson", esquema="Outline", test="Quiz", prueba="Try it"), tabl="Topic sections",
     ok="Correct!", ko="Not quite.", score="Score", run="Run", reset="Reset", reto="Challenge", clave="Key idea",
-    result="Result", retry="Try again", cons="Console", sandbox="Runs in your browser, sandboxed.", jsl="JavaScript",
+    result="Result", retry="Try again", cons="Console", sandbox="Runs in your browser, sandboxed.", jsl="JavaScript", jsx="JSX", tsx="TSX",
     secl="Sections", qn="Question {n} of {m}", kick="Guide {n} of {m} · {s}", prev="Previous", next="Next",
     st_g="guides", st_s="sections", st_l="languages", start="Start", cont="Continue", readn="{a} of {b} read")
 
@@ -327,16 +327,21 @@ def render_test(txt, t, base):
 ES_PRUEBA = {}
 
 def render_prueba(txt, t, base, rel=""):
-    out = []
+    intro = re.split(r"^## ", txt, maxsplit=1, flags=re.M)[0].strip()
+    out = [md(intro, base)] if intro else []
     for n, g in enumerate(re.split(r"^## ", txt, flags=re.M)[1:], 1):
         title, _, rest = g.partition("\n")
         code = {k: v.rstrip("\n") for k, v in re.findall(r"```(\w+)\n(.*?)```", rest, re.S)}
+        kind = "tsx" if "tsx" in code else "jsx" if "jsx" in code else "js"
+        label = t[kind] if kind != "js" else t["jsl"]
+        attrs = (' data-jsx="1"' + (' data-ts="1"' if kind == "tsx" else "")) if kind != "js" else ""
+        html_code = code.get("html", '<div id="app"></div>' if kind != "js" else "")
         desc = re.split(r"^(?:Reto|Clave): ", rest.split("```")[0], flags=re.M)[0].strip()
         reto = re.search(r"^Reto: (.*)$", rest, re.M); clave = re.search(r"^Clave: (.*)$", rest, re.M)
         out.append(
             f'<section class="cx try"><h3 class="cx-t"><span class="cx-num">{n}</span>{inline(title, base)}</h3><p class="cx-d">{inline(desc, base)}</p>'
-            f'<div class="cx-two"><div><div class="cx-lab"><span class="cx-dot html"></span>HTML</div><div class="cx-ed"><textarea class="th" spellcheck="false" rows="5" aria-label="HTML">{esc(code.get("html", ""))}</textarea></div></div>'
-            f'<div><div class="cx-lab"><span class="cx-dot js"></span>{t["jsl"]}</div><div class="cx-ed"><textarea class="tj" spellcheck="false" rows="14" aria-label="{t["jsl"]}">{esc(code.get("js", ""))}</textarea></div></div></div>'
+            f'<div class="cx-two"><div><div class="cx-lab"><span class="cx-dot html"></span>HTML</div><div class="cx-ed"><textarea class="th" spellcheck="false" rows="5" aria-label="HTML">{esc(html_code)}</textarea></div></div>'
+            f'<div><div class="cx-lab"><span class="cx-dot js"></span>{label}</div><div class="cx-ed"><textarea class="tj"{attrs} spellcheck="false" rows="14" aria-label="{label}">{esc(code.get(kind, ""))}</textarea></div></div></div>'
             f'<div class="cx-acts"><button type="button" class="run btn primary">{t["run"]}</button><button type="button" class="reset btn">{t["reset"]}</button>'
             f'<span class="cx-hint">{t["sandbox"]}</span></div>'
             f'<div class="cx-lab"><span class="cx-dot res"></span>{t["result"]}</div>'

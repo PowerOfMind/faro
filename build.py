@@ -484,6 +484,8 @@ def main():
     if OUT.exists(): shutil.rmtree(OUT)
     OUT.mkdir()
     shutil.copytree(ROOT / "assets", OUT / "assets")
+    for f in (ROOT / "static").glob("*"):  # ficheros de verificación (Search Console, etc.) en la raíz
+        shutil.copyfile(f, OUT / f.name)
     vercel_config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
     for key in ("buildCommand", "outputDirectory", "installCommand"):
         vercel_config.pop(key, None)

@@ -34,7 +34,7 @@ T = {
               ("seo-geo", "SEO y GEO", "Que te encuentren buscadores y que te citen los modelos."),
               ("lit", "Lit y Web Components", "Resumen de Lit 3: reactividad, plantillas, estilos y datos."),
               ("js-ts", "JavaScript y TypeScript", "Lo esencial que más se busca."),
-              ("frameworks", "React y Angular", "Cómo pensar cada uno y sus trampas."),
+              ("frameworks", "React y Angular", "Cómo pensar cada uno, React Native y Expo, y sus trampas."),
               ("librerias", "Librerías rápidas", "Qué usar para cada problema, en una línea.")]),
     "en": dict(
         lema="Shortcuts for when AI can't give you the answer",
@@ -54,7 +54,7 @@ T = {
               ("seo-geo", "SEO and GEO", "Get found by search engines and cited by models."),
               ("lit", "Lit and Web Components", "Lit 3 summary: reactivity, templates, styles and data."),
               ("js-ts", "JavaScript and TypeScript", "The essentials people search for most."),
-              ("frameworks", "React and Angular", "How to think about each one and their traps."),
+              ("frameworks", "React and Angular", "How to think about each one, React Native and Expo, and their traps."),
               ("librerias", "Quick library picks", "What to use for each problem, in one line.")]),
 }
 

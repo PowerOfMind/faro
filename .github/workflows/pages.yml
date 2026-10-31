@@ -14,9 +14,8 @@ jobs:
         with: { python-version: "3.12" }
       - name: Construir
         run: |
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          REPO="${GITHUB_REPOSITORY#*/}"
-          SITE_URL="https://${OWNER}.github.io/${REPO}" python build.py
+          SITE_PREFIX="/${GITHUB_REPOSITORY#*/}/" SITE_URL="https://lighthub-dev.vercel.app" python build.py
+          rm dist/sitemap.xml
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:

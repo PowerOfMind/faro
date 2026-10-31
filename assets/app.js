@@ -148,7 +148,7 @@
   }
   addEventListener('message', function (e) {
     if (!e.data || !e.data.lighthub) return;
-    var sec = $$('.try').filter(function (s) { return s.dataset.id === String(e.data.lighthub); })[0]; if (!sec) return;
+    var sec = $$('.try').filter(function (s) { return s.dataset.id === String(e.data.lighthub); })[0]; if (!sec || e.source !== $('.out', sec).contentWindow) return;
     var con = $('.con', sec); con.hidden = false;
     var line = d.createElement('div'); if (e.data.k === 'error') line.className = 'e'; line.textContent = e.data.t; con.appendChild(line);
   });

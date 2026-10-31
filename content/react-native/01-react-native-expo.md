@@ -4,7 +4,7 @@ desc: Bases prácticas para retomar una aplicación móvil con React Native y Ex
 pkgs: react-native, expo, expo-router
 ---
 ## Modelo mental: React sin DOM
-Props, estado y hooks funcionan como en [React](@/frameworks/react), pero en iOS y Android React Native representa componentes nativos, no un DOM: no uses `div`, `p` ni CSS de navegador. En web existe React Native Web, con diferencias de plataforma.
+Props, estado y hooks funcionan como en [React](@/react/react), pero en iOS y Android React Native representa componentes nativos, no un DOM: no uses `div`, `p` ni CSS de navegador. En web existe React Native Web, con diferencias de plataforma.
 
 Los estilos son objetos JavaScript: `StyleSheet.create` los agrupa, usa `backgroundColor` y dimensiones numéricas independientes de la densidad, sin escribir `px`. Flexbox tiene `flexDirection: 'column'` por defecto: `justifyContent` distribuye en el eje vertical y `alignItems` en el horizontal, salvo que cambies la dirección.
 

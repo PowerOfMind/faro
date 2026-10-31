@@ -4,7 +4,7 @@ desc: Practical foundations for returning to a mobile app with React Native and 
 pkgs: react-native, expo, expo-router
 ---
 ## Mental model: React without the DOM
-Props, state and hooks work as in [React](@/frameworks/react), but on iOS and Android React Native renders native components, not a DOM: do not use `div`, `p` or browser CSS. React Native Web also exists, with platform differences.
+Props, state and hooks work as in [React](@/react/react), but on iOS and Android React Native renders native components, not a DOM: do not use `div`, `p` or browser CSS. React Native Web also exists, with platform differences.
 
 Styles are JavaScript objects: `StyleSheet.create` groups them, using `backgroundColor` and numeric density-independent dimensions without writing `px`. Flexbox defaults to `flexDirection: 'column'`: `justifyContent` distributes along the vertical axis and `alignItems` along the horizontal axis, unless you change the direction.
 

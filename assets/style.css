@@ -199,5 +199,5 @@ blockquote{margin:0 0 14px;padding:0 16px;border-left:3px solid var(--line);colo
 footer{padding:18px 16px;color:var(--muted);font-size:13.5px;text-align:center}
 @media (max-width:900px){.lec-title{font-size:25px}.lec-pn{grid-template-columns:1fr}.lec-s,.cx{padding:16px}}
 @media (max-width:520px){.apptitle small{display:none}.langs a{min-width:40px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{.top,#side,.tabs,footer,#scrim,.copy{display:none}body{display:block}.panel[hidden]{display:block!important}.panel>h2.ph{display:block!important}}

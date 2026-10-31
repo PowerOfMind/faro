@@ -1,0 +1,151 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://esm.sh; frame-src 'self' about: blob: data:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/frameworks/react",
+      "destination": "/react/react.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/react.html",
+      "destination": "/react/react.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/react.md",
+      "destination": "/react/react.md",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/angular",
+      "destination": "/angular/angular.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/angular.html",
+      "destination": "/angular/angular.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/angular.md",
+      "destination": "/angular/angular.md",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/react-native-expo",
+      "destination": "/react-native/react-native-expo.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/react-native-expo.html",
+      "destination": "/react-native/react-native-expo.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/react-native-expo.md",
+      "destination": "/react-native/react-native-expo.md",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/elegir-framework",
+      "destination": "/librerias/elegir-framework.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/elegir-framework.html",
+      "destination": "/librerias/elegir-framework.html",
+      "permanent": true
+    },
+    {
+      "source": "/frameworks/elegir-framework.md",
+      "destination": "/librerias/elegir-framework.md",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react",
+      "destination": "/en/react/react.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react.html",
+      "destination": "/en/react/react.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react.md",
+      "destination": "/en/react/react.md",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/angular",
+      "destination": "/en/angular/angular.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/angular.html",
+      "destination": "/en/angular/angular.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/angular.md",
+      "destination": "/en/angular/angular.md",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react-native-expo",
+      "destination": "/en/react-native/react-native-expo.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react-native-expo.html",
+      "destination": "/en/react-native/react-native-expo.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/react-native-expo.md",
+      "destination": "/en/react-native/react-native-expo.md",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/elegir-framework",
+      "destination": "/en/librerias/elegir-framework.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/elegir-framework.html",
+      "destination": "/en/librerias/elegir-framework.html",
+      "permanent": true
+    },
+    {
+      "source": "/en/frameworks/elegir-framework.md",
+      "destination": "/en/librerias/elegir-framework.md",
+      "permanent": true
+    }
+  ]
+}
